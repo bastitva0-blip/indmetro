@@ -1,0 +1,1 @@
+export { delhiConfig } from "./config";

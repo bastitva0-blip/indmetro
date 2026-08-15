@@ -1,0 +1,1 @@
+export { hyderabadConfig } from "./config";

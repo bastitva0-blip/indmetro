@@ -1,0 +1,23 @@
+import type { LocalPlace } from "@/types/city";
+export const localPlaces: LocalPlace[] = [
+  { id:"dlf_mall_noida",      name:"DLF Mall of India",          category:"shopping",      coordinates:[28.5665,77.3290], nearestStationId:"sector_18_noida",  distanceKm:2.0 },
+  { id:"botanical_garden",    name:"Noida Botanical Garden",     category:"park",          coordinates:[28.5628,77.3408], nearestStationId:"sector_76",         distanceKm:1.8 },
+  { id:"sector_18_market",    name:"Sector 18 Market Noida",     category:"shopping",      coordinates:[28.5689,77.3219], nearestStationId:"sector_51",         distanceKm:3.5 },
+  { id:"nsez_tech_park",      name:"NSEZ Technology Park",       category:"education",     coordinates:[28.5323,77.3948], nearestStationId:"nsez",              distanceKm:0.2 },
+  { id:"greater_noida_expo",  name:"India Expo Mart",            category:"civic",         coordinates:[28.4668,77.4938], nearestStationId:"pari_chowk",        distanceKm:1.2 },
+  { id:"knowledge_park_inst", name:"Knowledge Park Institutions",category:"education",     coordinates:[28.4082,77.5094], nearestStationId:"knowledge_park_2",  distanceKm:0.1 },
+  { id:"pari_chowk_hub",      name:"Pari Chowk Commercial Hub",  category:"shopping",      coordinates:[28.4418,77.4854], nearestStationId:"pari_chowk",        distanceKm:0.2 },
+  { id:"fortis_noida",        name:"Fortis Hospital Noida",      category:"hospital",      coordinates:[28.5384,77.3908], nearestStationId:"sector_81",         distanceKm:0.6 },
+  { id:"kailash_hospital",    name:"Kailash Hospital Noida",     category:"hospital",      coordinates:[28.5699,77.3682], nearestStationId:"sector_50",         distanceKm:0.8 },
+  { id:"ambedkar_park",       name:"Dr. Ambedkar Park",          category:"park",          coordinates:[28.6131,77.3621], nearestStationId:"sector_51",         distanceKm:3.2 },
+  { id:"logix_mall",          name:"Logix City Centre Mall",     category:"shopping",      coordinates:[28.5742,77.3775], nearestStationId:"sector_50",         distanceKm:0.7 },
+  { id:"wave_city_center",    name:"Wave City Center Mall",      category:"shopping",      coordinates:[28.5238,77.3972], nearestStationId:"sector_83",         distanceKm:0.4 },
+  { id:"worlds_of_wonder",    name:"Worlds of Wonder Amusement Park",category:"entertainment",coordinates:[28.5645,77.3298],nearestStationId:"sector_76",      distanceKm:2.0 },
+  { id:"sector_62_it",        name:"Sector 62 IT Hub",           category:"education",     coordinates:[28.6218,77.3728], nearestStationId:"sector_51",         distanceKm:3.8 },
+  { id:"buddha_international_circuit",name:"Buddh International Circuit",category:"sports",coordinates:[28.3489,77.5314],nearestStationId:"depot_station",      distanceKm:5.5 },
+  { id:"cgc_greater_noida",   name:"Casio Grand City",           category:"shopping",      coordinates:[28.4242,77.4982], nearestStationId:"alpha_2",           distanceKm:0.4 },
+  { id:"jaypee_hospital",     name:"Jaypee Hospital",            category:"hospital",      coordinates:[28.5052,77.4082], nearestStationId:"sector_137",        distanceKm:0.8 },
+  { id:"delta_tech_park",     name:"Delta Tech Park",            category:"education",     coordinates:[28.4159,77.5036], nearestStationId:"delta_1",           distanceKm:0.3 },
+  { id:"gaur_city_mall",      name:"Gaur City Mall",             category:"shopping",      coordinates:[28.5108,77.4158], nearestStationId:"sector_137",        distanceKm:0.8 },
+  { id:"stellar_mi",          name:"Stellar IT Park",            category:"education",     coordinates:[28.5222,77.3965], nearestStationId:"sector_83",         distanceKm:0.1 },
+];

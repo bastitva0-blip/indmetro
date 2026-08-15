@@ -1,0 +1,23 @@
+import type { LocalPlace } from "@/types/city";
+export const localPlaces: LocalPlace[] = [
+  { id:"meerut_cantonment",    name:"Meerut Cantonment",          category:"civic",       coordinates:[28.9818,77.6838], nearestStationId:"bhaisali",       distanceKm:0.4 },
+  { id:"suraj_kund_park",      name:"Suraj Kund Park",            category:"park",        coordinates:[28.9548,77.7128], nearestStationId:"shatabdi_nagar", distanceKm:0.5 },
+  { id:"st_johns_church",      name:"St. John's Church (1821)",   category:"heritage",    coordinates:[28.9748,77.6972], nearestStationId:"meerut_central", distanceKm:0.8 },
+  { id:"aug_revolt_memorial",  name:"1857 Uprising Memorial",     category:"heritage",    coordinates:[28.9762,77.7018], nearestStationId:"meerut_central", distanceKm:0.5 },
+  { id:"gst_road_market",      name:"GST Road Market",            category:"shopping",    coordinates:[28.9835,77.7042], nearestStationId:"begum_pul",      distanceKm:0.6 },
+  { id:"begum_pul_bridge",     name:"Begum Pul Heritage Bridge",  category:"heritage",    coordinates:[28.9938,77.7028], nearestStationId:"begum_pul",      distanceKm:0.1 },
+  { id:"victoria_park",        name:"Victoria Park",              category:"park",        coordinates:[28.9701,77.6938], nearestStationId:"meerut_central", distanceKm:0.6 },
+  { id:"anand_vihar_meerut",   name:"Anand Vihar Meerut",         category:"shopping",    coordinates:[28.9858,77.7082], nearestStationId:"begum_pul",      distanceKm:0.8 },
+  { id:"meerut_medical_college",name:"Meerut Medical College",    category:"hospital",    coordinates:[28.9565,77.7142], nearestStationId:"shatabdi_nagar", distanceKm:0.4 },
+  { id:"llrm_hospital",        name:"LLRM Medical College Hospital",category:"hospital",  coordinates:[28.9722,77.6952], nearestStationId:"meerut_central", distanceKm:0.6 },
+  { id:"meerut_institute",     name:"Meerut Institute of Eng. Tech.",category:"education",coordinates:[28.9858,77.7082], nearestStationId:"mes_colony",     distanceKm:0.9 },
+  { id:"ccsu",                 name:"CCSU (Chaudhary Charan Singh Univ.)",category:"education",coordinates:[28.9558,77.7138],nearestStationId:"shatabdi_nagar",distanceKm:0.5},
+  { id:"modipuram_bus_stand",  name:"Modipuram Bus Stand",        category:"transport",   coordinates:[29.0338,77.7198], nearestStationId:"modipuram",      distanceKm:0.2 },
+  { id:"meerut_south_isbt",    name:"Meerut South ISBT",          category:"transport",   coordinates:[28.9238,77.7308], nearestStationId:"meerut_south",   distanceKm:0.3 },
+  { id:"rrts_meerut_south",    name:"Namo Bharat RRTS Meerut South",category:"transport", coordinates:[28.9238,77.7308], nearestStationId:"meerut_south",   distanceKm:0.1 },
+  { id:"gandhi_bagh",          name:"Gandhi Bagh",                category:"park",        coordinates:[28.9808,77.7008], nearestStationId:"bhaisali",       distanceKm:1.2 },
+  { id:"hapur_chungi_market",  name:"Hapur Chungi Market",        category:"shopping",    coordinates:[28.9818,77.6838], nearestStationId:"bhaisali",       distanceKm:0.3 },
+  { id:"swaroop_nagar",        name:"Swaroop Nagar Market",       category:"shopping",    coordinates:[29.0028,77.7028], nearestStationId:"mes_colony",     distanceKm:0.2 },
+  { id:"jama_masjid_meerut",   name:"Jama Masjid Meerut",         category:"religious",   coordinates:[28.9748,77.6988], nearestStationId:"meerut_central", distanceKm:0.4 },
+  { id:"kali_paltan_mandir",   name:"Kali Paltan Mandir",         category:"religious",   coordinates:[28.9858,77.6948], nearestStationId:"bhaisali",       distanceKm:1.0 },
+];

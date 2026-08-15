@@ -1,0 +1,1 @@
+export { chennaiConfig } from "./config";

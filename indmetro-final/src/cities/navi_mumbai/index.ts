@@ -1,0 +1,1 @@
+export { naviMumbaiConfig } from "./config";

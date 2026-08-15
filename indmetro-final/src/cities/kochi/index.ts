@@ -1,0 +1,1 @@
+export { kochiConfig } from "./config";

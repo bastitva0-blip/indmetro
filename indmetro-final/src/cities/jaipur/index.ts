@@ -1,0 +1,1 @@
+export { jaipurConfig } from "./config";

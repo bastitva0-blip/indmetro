@@ -1,0 +1,69 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "line": "blue", "name": "Blue Line (Operational)", "color": "#3B82F6", "phase": "operational" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [85.1733, 25.5862],
+          [85.1864, 25.5858],
+          [85.1891, 25.5791]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "blue", "name": "Blue Line (Priority Corridor WIP)", "color": "#3B82F6", "phase": "wip", "dashArray": "8,6" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [85.1578, 25.5938],
+          [85.1589, 25.5846],
+          [85.1733, 25.5862]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "blue", "name": "Blue Line (Underground WIP)", "color": "#3B82F6", "phase": "wip", "dashArray": "8,6" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [85.1375, 25.6028],
+          [85.1395, 25.6105],
+          [85.1452, 25.6199],
+          [85.1510, 25.6190],
+          [85.1570, 25.6160],
+          [85.1678, 25.6078],
+          [85.1630, 25.6003],
+          [85.1578, 25.5938]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "red", "name": "Red Line (All WIP)", "color": "#EF4444", "phase": "wip", "dashArray": "8,6" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [85.0420, 25.6170],
+          [85.0600, 25.6140],
+          [85.0760, 25.6100],
+          [85.0920, 25.6060],
+          [85.1040, 25.6020],
+          [85.1130, 25.6060],
+          [85.1200, 25.6100],
+          [85.1280, 25.6080],
+          [85.1330, 25.6050],
+          [85.1375, 25.6028],
+          [85.1480, 25.5980],
+          [85.1540, 25.5920],
+          [85.1570, 25.5870],
+          [85.1589, 25.5846]
+        ]
+      }
+    }
+  ]
+}

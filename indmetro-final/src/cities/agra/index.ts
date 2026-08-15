@@ -1,0 +1,1 @@
+export { agraConfig } from "./config";

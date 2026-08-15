@@ -1,0 +1,1 @@
+export { mumbaiConfig } from "./config";

@@ -1,0 +1,1 @@
+export { patnaConfig } from "./config";

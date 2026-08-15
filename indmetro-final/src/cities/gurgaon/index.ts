@@ -1,0 +1,1 @@
+export { gurgaonConfig } from "./config";
