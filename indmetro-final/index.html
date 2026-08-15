@@ -7,7 +7,7 @@
       // the wrong theme. Mirrors the logic in src/contexts/ThemeContext.tsx.
       (function () {
         try {
-          var pref = localStorage.getItem("lkometro:themePreference");
+          var pref = localStorage.getItem("indmetro:themePreference");
           var isDark =
             pref === "dark" ||
             (pref !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -24,9 +24,9 @@
     <title>IndMetro — India Metro Guide</title>
     <meta
       name="description"
-      content="Lucknow Metro live train tracking, fare calculator, route planner and station info for the Red Line. Check metro timings, fares (₹10–₹60), and plan your journey. Free PWA, works offline."
+      content="India's unified metro companion — 21 cities, route planning, live train tracking, fares and station info. Free PWA, works offline."
     />
-    <meta name="keywords" content="Lucknow Metro, Lucknow Metro fare, Lucknow Metro route, Lucknow Metro timing, Lucknow Metro map, Lucknow Metro Red Line, UPMRC, लखनऊ मेट्रो, metro train Lucknow, Lucknow Metro stations, metro fare calculator Lucknow, LkoMetro" />
+    <meta name="keywords" content="Lucknow Metro, Lucknow Metro fare, Lucknow Metro route, Lucknow Metro timing, Lucknow Metro map, Lucknow Metro Red Line, UPMRC, लखनऊ मेट्रो, metro train Lucknow, Lucknow Metro stations, metro fare calculator Lucknow, IndMetro" />
     <meta name="author" content="Astitva Bhardwaj" />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
@@ -55,7 +55,7 @@
     <meta property="og:title" content="IndMetro — India Metro Guide" />
     <meta
       property="og:description"
-      content="Live train tracking, route planning, fares and station info for the Lucknow Metro Red Line. Free, fast, and works offline."
+      content="Route planning, live train tracking, fares and station info for all Indian metros. Free, fast, and works offline."
     />
     <meta property="og:url" content="https://www.lucknowmetro.in/" />
     <meta property="og:image" content="https://www.lucknowmetro.in/og-image.png" />
@@ -68,7 +68,7 @@
     <meta name="twitter:title" content="IndMetro — India Metro Guide" />
     <meta
       name="twitter:description"
-      content="Live train tracking, route planning, fares and station info for the Lucknow Metro Red Line. Free PWA."
+      content="Route planning, fares and station info for 21 Indian metro systems. Free PWA."
     />
     <meta name="twitter:image" content="https://www.lucknowmetro.in/og-image.png" />
 
@@ -98,7 +98,7 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "LkoMetro — Lucknow Metro",
+        "name": "IndMetro — India's Metro Guide",
         "alternateName": ["Lucknow Metro App", "लखनऊ मेट्रो"],
         "url": "https://www.lucknowmetro.in/",
         "description": "An unofficial companion app for the Lucknow Metro Red Line with live train tracking, route planning, fare calculation and offline station search.",
@@ -147,7 +147,7 @@
       {
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
-        "name": "LkoMetro — Lucknow Metro Guide",
+        "name": "IndMetro — India's Metro Guide Guide",
         "description": "Unofficial Lucknow Metro companion app for live tracking, fares and route planning.",
         "url": "https://www.lucknowmetro.in/",
         "image": "https://www.lucknowmetro.in/og-image.png",
@@ -180,7 +180,7 @@
             "name": "What are Lucknow Metro fares?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Lucknow Metro fares range from ₹10 for 1 station to ₹60 for 18 or more stations on the Red Line. Use the LkoMetro fare calculator to find the exact fare between any two stations."
+              "text": "Lucknow Metro fares range from ₹10 for 1 station to ₹60 for 18 or more stations on the Red Line. Use the IndMetro fare calculator to find the exact fare between any two stations."
             }
           },
           {
@@ -204,15 +204,15 @@
             "name": "How do I plan a route on the Lucknow Metro?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Use the LkoMetro route planner at lucknowmetro.in. Select your source and destination station to instantly get travel time, number of stops, and the exact fare."
+              "text": "Use the IndMetro route planner at lucknowmetro.in. Select your source and destination station to instantly get travel time, number of stops, and the exact fare."
             }
           },
           {
             "@type": "Question",
-            "name": "Is LkoMetro an official UPMRC app?",
+            "name": "Is IndMetro an official UPMRC app?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. LkoMetro is an independent community-built companion app and is not affiliated with or endorsed by UPMRC or any government entity. Timings and fares are sourced from the official UPMRC website."
+              "text": "No. IndMetro is an independent community-built companion app and is not affiliated with or endorsed by UPMRC or any government entity. Timings and fares are sourced from the official UPMRC website."
             }
           },
           {
@@ -228,15 +228,15 @@
             "name": "How do I check my Go Smart card balance?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "You can check your UPMRC Go Smart card balance directly on LkoMetro at lucknowmetro.in using the Go Smart card balance checker feature."
+              "text": "You can check your UPMRC Go Smart card balance directly on IndMetro at lucknowmetro.in using the Go Smart card balance checker feature."
             }
           },
           {
             "@type": "Question",
-            "name": "Does LkoMetro work offline?",
+            "name": "Does IndMetro work offline?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes. LkoMetro is a Progressive Web App (PWA) and works offline after the first visit. You can search stations, check fares, and plan routes without an internet connection."
+              "text": "Yes. IndMetro is a Progressive Web App (PWA) and works offline after the first visit. You can search stations, check fares, and plan routes without an internet connection."
             }
           }
         ]

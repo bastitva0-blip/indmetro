@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { TrainFront, Info, Wallet, BookOpen, Download, ChevronLeft } from "lucide-react";
+import { Info, Wallet, BookOpen, Download, ChevronLeft } from "lucide-react";
+import IndMetroLogo from "@/components/icons/IndMetroLogo";
 import { useNavigate } from "react-router-dom";
 import {
   Drawer,
@@ -35,12 +36,10 @@ export const SideMenu = ({ open, onOpenChange, onOpenTips }: SideMenuProps) => {
           <DrawerHeader>
             <div className="flex items-center justify-between gap-2.5">
               <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center">
-                  <TrainFront className="h-5 w-5 text-primary-foreground" />
-                </div>
+                <IndMetroLogo size={36} />
                 <div>
                   <DrawerTitle>IndMetro</DrawerTitle>
-                  <p className="text-xs text-muted-foreground">Lucknow Metro</p>
+                  <p className="text-xs text-muted-foreground">India's metro companion</p>
                 </div>
               </div>
               <ThemeToggle />

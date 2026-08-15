@@ -16,7 +16,7 @@ export const TipsDialog = ({ open, onOpenChange }: TipsDialogProps) => {
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Fares, hours & tips</DialogTitle>
-          <DialogDescription>Everything you need to ride the Lucknow Metro Red Line.</DialogDescription>
+          <DialogDescription>Fares, timings and tips for your metro system.</DialogDescription>
         </DialogHeader>
 
         <Tabs defaultValue="fares">

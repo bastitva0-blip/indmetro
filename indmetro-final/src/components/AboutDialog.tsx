@@ -13,7 +13,7 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <TrainFront className="h-5 w-5 text-primary" /> About LkoMetro
+            <TrainFront className="h-5 w-5 text-primary" /> About IndMetro
           </DialogTitle>
           <DialogDescription>Why this exists, and what it does with your data.</DialogDescription>
         </DialogHeader>
@@ -27,14 +27,14 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
 
           <TabsContent value="why" className="space-y-3 text-sm text-muted-foreground leading-relaxed">
             <p>
-              Lucknow Metro has been running since 2019, but if you just want to know
+              IndMetro covers all 21 Indian metro systems. If you just want to know
               when your train arrives or what the fare is, the options are not great.
               The official site is built for announcements, and generic map apps do not
               understand metro-specific things like fare slabs, train headways, or
               which stations are underground.
             </p>
             <p>
-              <strong className="text-foreground">LkoMetro</strong> focuses on the
+              <strong className="text-foreground">IndMetro</strong> focuses on the
               three things a rider actually needs: when the next train is, what the
               fare will be, and the fastest route there. No ads, no clutter, and it
               works offline.
@@ -63,7 +63,7 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
               </p>
             </div>
             <p>
-              <strong className="text-foreground">No accounts, no servers.</strong> LkoMetro
+              <strong className="text-foreground">No accounts, no servers.</strong> IndMetro
               has no backend or database. Your GoSmart Card preference, balance tracker,
               and theme choice are all stored in your browser and never sent anywhere.
             </p>
@@ -91,7 +91,7 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
                 <TrainFront className="h-6 w-6 text-primary" />
               </div>
               <p className="text-sm font-medium">Astitva Bhardwaj</p>
-              <p className="text-xs text-muted-foreground">Designer &amp; developer of LkoMetro</p>
+              <p className="text-xs text-muted-foreground">Designer &amp; developer of IndMetro</p>
               <a
                 href="https://www.linkedin.com/in/astitva-bhardwajlu/"
                 target="_blank"

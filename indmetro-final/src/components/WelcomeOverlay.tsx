@@ -1,26 +1,31 @@
 import { useState, useEffect } from "react";
-import { TrainFront, Route, Users, Wifi } from "lucide-react";
+import { Route, Users, Wifi } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { TrainFront } from "lucide-react";
 
-const STORAGE_KEY = "indmetro:lucknow:hasSeenWelcome";
+interface WelcomeOverlayProps {
+  cityName?: string;
+  storageKey?: string;
+}
 
-export const WelcomeOverlay = () => {
+export const WelcomeOverlay = ({
+  cityName = "IndMetro",
+  storageKey = "indmetro:hasSeenWelcome",
+}: WelcomeOverlayProps) => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     try {
-      if (!localStorage.getItem(STORAGE_KEY)) setShow(true);
+      if (!localStorage.getItem(storageKey)) setShow(true);
     } catch {
       setShow(true);
     }
-  }, []);
+  }, [storageKey]);
 
   const dismiss = () => {
     try {
-      localStorage.setItem(STORAGE_KEY, "true");
-    } catch {
-      // ignore
-    }
+      localStorage.setItem(storageKey, "true");
+    } catch {}
     setShow(false);
   };
 
@@ -32,10 +37,9 @@ export const WelcomeOverlay = () => {
         <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center mb-4">
           <TrainFront className="h-6 w-6 text-primary-foreground" />
         </div>
-        <h1 className="font-display text-2xl font-semibold mb-1">Welcome to LkoMetro</h1>
+        <h1 className="font-display text-2xl font-semibold mb-1">Welcome to {cityName}</h1>
         <p className="text-sm text-muted-foreground mb-5">
-          Your companion for the Lucknow Metro Red Line — plan journeys, track trains live, and
-          check fares, all in one place.
+          Plan journeys, track trains live, check fares and crowd levels — all in one place.
         </p>
 
         <div className="space-y-3 mb-6">
