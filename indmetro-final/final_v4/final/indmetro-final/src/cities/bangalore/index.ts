@@ -1,0 +1,1 @@
+export { bangaloreConfig } from "./config";

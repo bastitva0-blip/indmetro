@@ -1,0 +1,81 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "line": "Orange Line",
+        "color": "#F97316",
+        "segment": "Priority Corridor (Operational)",
+        "operator": "MPMRCL",
+        "status": "operational",
+        "opened": "2025-12-21"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [77.4005, 23.1928],
+          [77.4098, 23.2065],
+          [77.4218, 23.2138],
+          [77.4401, 23.2216],
+          [77.4352, 23.2355],
+          [77.4295, 23.2455],
+          [77.4258, 23.2572],
+          [77.4238, 23.2680]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "line": "Orange Line",
+        "color": "#F97316",
+        "segment": "Under Construction (Subhash Nagar → Karond)",
+        "operator": "MPMRCL",
+        "status": "under-construction"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [77.4238, 23.2680],
+          [77.4218, 23.2785],
+          [77.4165, 23.2865],
+          [77.4038, 23.2842],
+          [77.4130, 23.2672],
+          [77.4012, 23.3045],
+          [77.3955, 23.3175],
+          [77.3900, 23.3310],
+          [77.3812, 23.3478]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "line": "Blue Line",
+        "color": "#3B82F6",
+        "segment": "Under Construction (Full)",
+        "operator": "MPMRCL",
+        "status": "under-construction"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [77.3922, 23.2652],
+          [77.4012, 23.2582],
+          [77.4118, 23.2538],
+          [77.4182, 23.2510],
+          [77.4225, 23.2575],
+          [77.4308, 23.2618],
+          [77.4165, 23.2865],
+          [77.4385, 23.2688],
+          [77.4495, 23.2712],
+          [77.4618, 23.2745],
+          [77.4745, 23.2758],
+          [77.4872, 23.2772],
+          [77.5012, 23.2782]
+        ]
+      }
+    }
+  ]
+}

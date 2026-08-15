@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      // Apply the saved/system theme before first paint to avoid a flash of
+      // the wrong theme. Mirrors the logic in src/contexts/ThemeContext.tsx.
+      (function () {
+        try {
+          var pref = localStorage.getItem("lkometro:themePreference");
+          var isDark =
+            pref === "dark" ||
+            (pref !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.classList.toggle("dark", isDark);
+          document.documentElement.style.colorScheme = isDark ? "dark" : "light";
+        } catch (e) {
+          /* ignore */
+        }
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0" />
+
+    <!-- Primary SEO -->
+    <title>IndMetro — India Metro Guide</title>
+    <meta
+      name="description"
+      content="Lucknow Metro live train tracking, fare calculator, route planner and station info for the Red Line. Check metro timings, fares (₹10–₹60), and plan your journey. Free PWA, works offline."
+    />
+    <meta name="keywords" content="Lucknow Metro, Lucknow Metro fare, Lucknow Metro route, Lucknow Metro timing, Lucknow Metro map, Lucknow Metro Red Line, UPMRC, लखनऊ मेट्रो, metro train Lucknow, Lucknow Metro stations, metro fare calculator Lucknow, LkoMetro" />
+    <meta name="author" content="Astitva Bhardwaj" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+    <!-- Canonical — always your production domain -->
+    <link rel="canonical" href="https://www.lucknowmetro.in/" />
+
+    <!-- Geo / regional signals -->
+    <meta name="geo.region" content="IN-UP" />
+    <meta name="geo.placename" content="Lucknow, Uttar Pradesh, India" />
+    <meta name="geo.position" content="26.8467;80.9462" />
+    <meta name="ICBM" content="26.8467, 80.9462" />
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#9F1239" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#6E0C28" media="(prefers-color-scheme: dark)" />
+
+    <!-- Favicons / PWA icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="IndMetro — India Metro Guide" />
+    <meta property="og:title" content="IndMetro — India Metro Guide" />
+    <meta
+      property="og:description"
+      content="Live train tracking, route planning, fares and station info for the Lucknow Metro Red Line. Free, fast, and works offline."
+    />
+    <meta property="og:url" content="https://www.lucknowmetro.in/" />
+    <meta property="og:image" content="https://www.lucknowmetro.in/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="IndMetro — India Metro Guide" />
+    <meta
+      name="twitter:description"
+      content="Live train tracking, route planning, fares and station info for the Lucknow Metro Red Line. Free PWA."
+    />
+    <meta name="twitter:image" content="https://www.lucknowmetro.in/og-image.png" />
+
+    <!-- Auto-discovery links for AI agents (Lighthouse Agentic Browsing) -->
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM index" />
+    <link rel="alternate" type="application/json" href="/agents.json" title="Agent actions manifest" />
+    <link rel="alternate" type="text/markdown" href="/agent-instructions.md" title="Agent instructions" />
+
+    <!-- Fonts — loaded asynchronously to avoid render-blocking -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    <!-- JSON-LD: WebApplication -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "LkoMetro — Lucknow Metro",
+        "alternateName": ["Lucknow Metro App", "लखनऊ मेट्रो"],
+        "url": "https://www.lucknowmetro.in/",
+        "description": "An unofficial companion app for the Lucknow Metro Red Line with live train tracking, route planning, fare calculation and offline station search.",
+        "applicationCategory": "TravelApplication",
+        "operatingSystem": "Any (Progressive Web App)",
+        "inLanguage": "en-IN",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "INR"
+        },
+        "featureList": [
+          "Live train tracking",
+          "Fare calculator",
+          "Route planner",
+          "Offline support",
+          "Station search",
+          "Go Smart card balance checker"
+        ],
+        "screenshot": "https://www.lucknowmetro.in/og-image.png",
+        "author": {
+          "@type": "Person",
+          "name": "Astitva Bhardwaj",
+          "url": "https://www.linkedin.com/in/astitva-bhardwajlu/"
+        }
+      }
+    </script>
+
+    <!-- JSON-LD: SiteNavigationElement (helps Google understand your app structure) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SiteLinksSearchBox",
+        "url": "https://www.lucknowmetro.in/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://www.lucknowmetro.in/?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+
+    <!-- JSON-LD: LocalBusiness / Transit -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "LkoMetro — Lucknow Metro Guide",
+        "description": "Unofficial Lucknow Metro companion app for live tracking, fares and route planning.",
+        "url": "https://www.lucknowmetro.in/",
+        "image": "https://www.lucknowmetro.in/og-image.png",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Lucknow",
+          "addressRegion": "Uttar Pradesh",
+          "addressCountry": "IN"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 26.8467,
+          "longitude": 80.9462
+        },
+        "areaServed": {
+          "@type": "City",
+          "name": "Lucknow"
+        }
+      }
+    </script>
+
+    <!-- JSON-LD: FAQ -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What are Lucknow Metro fares?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Lucknow Metro fares range from ₹10 for 1 station to ₹60 for 18 or more stations on the Red Line. Use the LkoMetro fare calculator to find the exact fare between any two stations."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What are Lucknow Metro timings / operating hours?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Lucknow Metro Red Line operates from 6:00 AM to 10:00 PM daily. During peak hours (8–11 AM and 5–8 PM on weekdays) trains run every 5 minutes 30 seconds. Off-peak frequency is approximately every 8 minutes."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How many stations does the Lucknow Metro Red Line have?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The Lucknow Metro Red Line has 21 stations from CCS Airport to Munshipulia, covering 22.87 km. Underground stations are Hussainganj, Sachivalaya, and Hazratganj."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I plan a route on the Lucknow Metro?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Use the LkoMetro route planner at lucknowmetro.in. Select your source and destination station to instantly get travel time, number of stops, and the exact fare."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is LkoMetro an official UPMRC app?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. LkoMetro is an independent community-built companion app and is not affiliated with or endorsed by UPMRC or any government entity. Timings and fares are sourced from the official UPMRC website."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the fare from Charbagh to Hazratganj on the Lucknow Metro?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The fare from Charbagh to Hazratganj on the Lucknow Metro Red Line is ₹20 (2 stations apart). The journey takes approximately 4 minutes."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I check my Go Smart card balance?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "You can check your UPMRC Go Smart card balance directly on LkoMetro at lucknowmetro.in using the Go Smart card balance checker feature."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does LkoMetro work offline?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. LkoMetro is a Progressive Web App (PWA) and works offline after the first visit. You can search stations, check fares, and plan routes without an internet connection."
+            }
+          }
+        ]
+      }
+    </script>
+
+    <!-- JSON-LD: Lucknow Metro Red Line Station List -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Lucknow Metro Red Line Stations",
+        "description": "All 21 stations on the Lucknow Metro Red Line from CCS Airport to Munshipulia",
+        "numberOfItems": 21,
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "CCS Airport" },
+          { "@type": "ListItem", "position": 2, "name": "Amausi" },
+          { "@type": "ListItem", "position": 3, "name": "Transport Nagar" },
+          { "@type": "ListItem", "position": 4, "name": "Krishna Nagar" },
+          { "@type": "ListItem", "position": 5, "name": "Singar Nagar" },
+          { "@type": "ListItem", "position": 6, "name": "Alambagh" },
+          { "@type": "ListItem", "position": 7, "name": "Alambagh Bus Stand" },
+          { "@type": "ListItem", "position": 8, "name": "Mawaiya" },
+          { "@type": "ListItem", "position": 9, "name": "Durgapuri" },
+          { "@type": "ListItem", "position": 10, "name": "Charbagh" },
+          { "@type": "ListItem", "position": 11, "name": "Hussainganj" },
+          { "@type": "ListItem", "position": 12, "name": "Sachivalaya" },
+          { "@type": "ListItem", "position": 13, "name": "Hazratganj" },
+          { "@type": "ListItem", "position": 14, "name": "KD Singh Babu Stadium" },
+          { "@type": "ListItem", "position": 15, "name": "Vishvavidyalaya" },
+          { "@type": "ListItem", "position": 16, "name": "IT Chauraha" },
+          { "@type": "ListItem", "position": 17, "name": "Badshah Nagar" },
+          { "@type": "ListItem", "position": 18, "name": "Lekhraj Market" },
+          { "@type": "ListItem", "position": 19, "name": "Bhootnath Market" },
+          { "@type": "ListItem", "position": 20, "name": "Indira Nagar" },
+          { "@type": "ListItem", "position": 21, "name": "Munshipulia" }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

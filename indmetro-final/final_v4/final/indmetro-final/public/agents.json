@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "name": "LkoMetro — Lucknow Metro",
+  "description": "Unofficial companion app for the Lucknow Metro Red Line. Provides route planning, live train tracking, fare calculation and offline station search.",
+  "url": "https://www.lucknowmetro.in/",
+  "actions": [
+    {
+      "id": "plan-route",
+      "name": "Plan a metro route",
+      "description": "Open the route planner to calculate travel time and fare between two stations on the Lucknow Metro Red Line.",
+      "url": "https://www.lucknowmetro.in/?action=route",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "string",
+          "description": "Origin station name (e.g. 'Charbagh', 'CCS Airport')",
+          "required": false
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "description": "Destination station name (e.g. 'Hazratganj', 'Munshipulia')",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "search-station",
+      "name": "Search for a station or landmark",
+      "description": "Search for any of the 21 Red Line stations or nearby landmarks by name.",
+      "url": "https://www.lucknowmetro.in/?q={query}",
+      "parameters": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "Station or landmark name to search for",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "live-tracking",
+      "name": "View live train positions",
+      "description": "See real-time simulated positions of all active trains on the Red Line.",
+      "url": "https://www.lucknowmetro.in/?action=live",
+      "parameters": []
+    }
+  ]
+}

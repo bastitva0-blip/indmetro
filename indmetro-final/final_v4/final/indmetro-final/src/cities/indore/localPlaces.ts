@@ -1,0 +1,23 @@
+import type { LocalPlace } from "@/types/city";
+export const localPlaces: LocalPlace[] = [
+  { id:"rajwada_palace",       name:"Rajwada Palace",               category:"heritage",     coordinates:[22.7196,75.8389], nearestStationId:"rajwada",              distanceKm:0.1 },
+  { id:"lal_bagh_palace",      name:"Lal Bagh Palace",              category:"heritage",     coordinates:[22.7049,75.8522], nearestStationId:"bsf_kalani_nagar",     distanceKm:1.2 },
+  { id:"central_museum",       name:"Central Museum Indore",        category:"heritage",     coordinates:[22.7238,75.8602], nearestStationId:"high_court",           distanceKm:0.8 },
+  { id:"khajrana_ganesh",      name:"Khajrana Ganesh Temple",       category:"religious",    coordinates:[22.7398,75.8082], nearestStationId:"khajrana_square",      distanceKm:0.2 },
+  { id:"annapurna_temple",     name:"Annapurna Temple",             category:"religious",    coordinates:[22.7145,75.8412], nearestStationId:"rajwada",              distanceKm:0.8 },
+  { id:"indore_railway",       name:"Indore Railway Station",       category:"transport",    coordinates:[22.7199,75.8468], nearestStationId:"indore_railway_station",distanceKm:0.1 },
+  { id:"sarwate_bus_stand",    name:"Sarwate Bus Stand",            category:"transport",    coordinates:[22.7178,75.8401], nearestStationId:"rajwada",              distanceKm:0.6 },
+  { id:"palasia_market",       name:"Palasia Shopping Area",        category:"shopping",     coordinates:[22.7198,75.8631], nearestStationId:"palasia_square",       distanceKm:0.2 },
+  { id:"vijay_nagar_market",   name:"Vijay Nagar Market",           category:"shopping",     coordinates:[22.7128,75.8188], nearestStationId:"vijay_nagar_square",   distanceKm:0.2 },
+  { id:"treasure_island_mall", name:"Treasure Island Mall",         category:"shopping",     coordinates:[22.7215,75.8649], nearestStationId:"palasia_square",       distanceKm:0.4 },
+  { id:"phoenix_palassio",     name:"Phoenix Palassio Mall",        category:"shopping",     coordinates:[22.7112,75.8098], nearestStationId:"bada_ganpati",         distanceKm:0.9 },
+  { id:"mhow_road",            name:"56 Dukan Street Food",         category:"entertainment",coordinates:[22.7241,75.8638], nearestStationId:"high_court",           distanceKm:0.7 },
+  { id:"iim_indore",           name:"IIM Indore",                   category:"education",    coordinates:[22.6948,75.8561], nearestStationId:"chandragupta_square",  distanceKm:1.0 },
+  { id:"daly_college",         name:"Daly College",                 category:"education",    coordinates:[22.7149,75.8541], nearestStationId:"high_court",           distanceKm:0.5 },
+  { id:"my_hospital",          name:"MY Hospital (MGM Medical)",    category:"hospital",     coordinates:[22.7179,75.8521], nearestStationId:"high_court",           distanceKm:0.4 },
+  { id:"bombay_hospital",      name:"Bombay Hospital",              category:"hospital",     coordinates:[22.7232,75.8842], nearestStationId:"maharani_lakshmi_bai", distanceKm:0.8 },
+  { id:"super_corridor_it",    name:"Super Corridor IT Park",       category:"education",    coordinates:[22.7492,75.8968], nearestStationId:"maharani_lakshmi_bai", distanceKm:0.1 },
+  { id:"devi_ahilya_airport",  name:"Devi Ahilya Bai Holkar Airport",category:"transport",  coordinates:[22.7271,75.8012], nearestStationId:"airport_indore",       distanceKm:0.4 },
+  { id:"krishnapura_chhatris", name:"Krishnapura Chhatris",         category:"heritage",     coordinates:[22.7198,75.8345], nearestStationId:"veerangana_jhalkari_bai",distanceKm:1.8},
+  { id:"chhappan_dukan",       name:"Chappan Dukan",                category:"entertainment",coordinates:[22.7199,75.8641], nearestStationId:"palasia_square",       distanceKm:0.3 },
+];

@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "line": "rapid", "name": "Rapid Line (Phase 2)", "color": "#00BCD4", "phase": "operational" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [77.1052, 28.4233], [77.1049, 28.4329], [77.1004, 28.4464],
+          [77.0969, 28.4574], [77.0939, 28.4714], [77.0931, 28.4814]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "rapid", "name": "Rapid Line (Phase 1)", "color": "#00BCD4", "phase": "operational" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [77.0931, 28.4814], [77.0932, 28.4842], [77.0933, 28.4871],
+          [77.0934, 28.4901], [77.0935, 28.4918], [77.0937, 28.4935]
+        ]
+      }
+    }
+  ]
+}

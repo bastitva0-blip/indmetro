@@ -1,0 +1,33 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "line": "line1",
+        "name": "Line 1 — CBD Belapur → Pendhar",
+        "color": "#FFC107",
+        "phase": "operational",
+        "lengthKm": 11.1,
+        "stations": 11,
+        "operator": "CIDCO / Konkan Railway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [73.0352, 19.0173],
+          [73.0415, 19.0223],
+          [73.0508, 19.0308],
+          [73.0578, 19.0408],
+          [73.0622, 19.0468],
+          [73.0672, 19.0538],
+          [73.0735, 19.0618],
+          [73.0808, 19.0718],
+          [73.0878, 19.0818],
+          [73.0958, 19.0938],
+          [73.1018, 19.1018]
+        ]
+      }
+    }
+  ]
+}

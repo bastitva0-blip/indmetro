@@ -1,0 +1,79 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "line": "blue", "name": "Blue Line L1 — Dakshineswar → Kavi Subhash", "color": "#2196F3", "phase": "operational", "lengthKm": 31.4, "stations": 26, "gauge": "1676mm broad gauge" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [88.36372,22.65397],[88.37020,22.64420],[88.37420,22.63240],[88.38020,22.61840],
+          [88.38420,22.60720],[88.38120,22.59680],[88.37240,22.58840],[88.36520,22.58280],
+          [88.35880,22.57680],[88.35879,22.57247],[88.35414,22.56680],[88.35167,22.56444],
+          [88.35220,22.55320],[88.34740,22.54360],[88.34320,22.53400],[88.33940,22.52320],
+          [88.34220,22.51160],[88.34480,22.50000],[88.34700,22.49000],[88.35520,22.47960],
+          [88.35940,22.46960],[88.36880,22.46120],[88.37620,22.45400],[88.39167,22.46597],
+          [88.39240,22.44800],[88.39806,22.47194]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "green", "name": "Green Line L2 — Howrah Maidan → Central Park", "color": "#4CAF50", "phase": "operational", "lengthKm": 16.6, "stations": 12 },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [88.32680,22.57720],[88.33320,22.58480],[88.34160,22.56880],[88.35167,22.56444],
+          [88.37220,22.56900],[88.38720,22.57480],[88.41180,22.57680],[88.41520,22.56920],
+          [88.42620,22.57320],[88.43420,22.57720],[88.44160,22.58080],[88.44960,22.58280]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "orange", "name": "Orange Line L6 — Hemanta Mukhopadhyay → Sonarpur (Operational)", "color": "#FF9800", "phase": "operational", "lengthKm": 9, "stations": 6 },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [88.39600,22.46000],[88.40200,22.45200],[88.41000,22.44400],
+          [88.41800,22.43600],[88.42600,22.42800],[88.43200,22.42000]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "orange", "name": "Orange Line L6 — WIP to Biman Bandar (Airport)", "color": "#FF9800", "phase": "wip", "dashArray": "8,6" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [88.43200,22.42000],[88.43800,22.41200],[88.41800,22.51200],
+          [88.40200,22.57800],[88.44700,22.65400]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "purple", "name": "Purple Line L3 — Joka → Taratala (Operational)", "color": "#9C27B0", "phase": "operational", "lengthKm": 6.5, "stations": 6 },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [88.31240,22.43930],[88.32900,22.45920],[88.33510,22.47150],
+          [88.33520,22.48620],[88.34100,22.50180],[88.34480,22.51500]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "purple", "name": "Purple Line L3 — WIP to BBD Bagh/Esplanade", "color": "#9C27B0", "phase": "wip", "dashArray": "8,6" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [88.34480,22.51500],[88.34200,22.52580],[88.33630,22.53530],
+          [88.33200,22.54120],[88.35200,22.54800],[88.36300,22.52600],
+          [88.35000,22.54200],[88.34400,22.55000],[88.33800,22.55600],
+          [88.35167,22.56444]
+        ]
+      }
+    }
+  ]
+}

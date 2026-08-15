@@ -1,0 +1,1 @@
+export { indoreConfig } from "./config";

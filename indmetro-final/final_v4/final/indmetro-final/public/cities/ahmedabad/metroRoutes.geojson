@@ -1,0 +1,55 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "line": "blue", "name": "Blue Line — Vastral Gam → Thaltej Gam", "color": "#2196F3", "phase": "operational", "lengthKm": 20.7, "stations": 18 },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [72.6550, 23.0100], [72.6450, 23.0150], [72.6320, 23.0200],
+          [72.6200, 23.0240], [72.6100, 23.0260], [72.6000, 23.0270],
+          [72.5920, 23.0280], [72.5870, 23.0280], [72.5850, 23.0280],
+          [72.5780, 23.0290], [72.5720, 23.0280], [72.5650, 23.0270],
+          [72.5580, 23.0300], [72.5500, 23.0340], [72.5420, 23.0380],
+          [72.5380, 23.0410], [72.5360, 23.0430], [72.53493, 23.04587]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "blue", "name": "Blue Line — Thaltej WIP", "color": "#2196F3", "phase": "wip", "dashArray": "8,6" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [72.53493, 23.04587], [72.5200, 23.0500], [72.5140, 23.0520], [72.5080, 23.0540]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "red", "name": "Red Line — APMC → Motera Stadium", "color": "#F44336", "phase": "operational", "lengthKm": 18.5, "stations": 16 },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [72.53725, 22.99773], [72.54500, 23.01200], [72.55200, 23.02000],
+          [72.58500, 23.02800], [72.58800, 23.03200], [72.58900, 23.03500],
+          [72.58200, 23.03900], [72.57500, 23.04200], [72.57000, 23.04600],
+          [72.56800, 23.04800], [72.56239, 23.05618], [72.58777, 23.06979],
+          [72.59321, 23.07511], [72.59228, 23.08564], [72.58800, 23.09000],
+          [72.60350, 23.09950]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "red", "name": "Red Line — Phase 2 WIP", "color": "#F44336", "phase": "wip", "dashArray": "8,6" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [72.60350, 23.09950], [72.59800, 23.09500], [72.60100, 23.10200]
+        ]
+      }
+    }
+  ]
+}

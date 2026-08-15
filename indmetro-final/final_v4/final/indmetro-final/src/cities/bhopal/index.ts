@@ -1,0 +1,1 @@
+export { bhopalConfig } from "./config";

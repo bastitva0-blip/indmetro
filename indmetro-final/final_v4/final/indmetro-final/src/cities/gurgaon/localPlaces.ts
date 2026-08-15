@@ -1,0 +1,23 @@
+import type { LocalPlace } from "@/types/city";
+export const localPlaces: LocalPlace[] = [
+  { id: "dlf_cyber_hub",      name: "DLF Cyber Hub",              category: "entertainment", coordinates: [28.4942, 77.0890], nearestStationId: "cyber_city",       distanceKm: 0.3 },
+  { id: "cyber_city_offices", name: "DLF Cyber City IT Hub",      category: "education",     coordinates: [28.4938, 77.0882], nearestStationId: "cyber_city",       distanceKm: 0.2 },
+  { id: "ambience_mall",      name: "Ambience Mall Gurugram",     category: "shopping",      coordinates: [28.5032, 77.0898], nearestStationId: "dlf_phase_3",      distanceKm: 1.2 },
+  { id: "dlf_mall_of_india",  name: "DLF Mall of India",          category: "shopping",      coordinates: [28.4714, 77.0939], nearestStationId: "dlf_phase_1",      distanceKm: 0.4 },
+  { id: "kingdom_of_dreams",  name: "Kingdom of Dreams",          category: "entertainment", coordinates: [28.4917, 77.0878], nearestStationId: "cyber_city",       distanceKm: 0.6 },
+  { id: "unitech_cyber_park",  name: "Unitech Cyber Park",        category: "education",     coordinates: [28.4822, 77.0934], nearestStationId: "dlf_phase_2",      distanceKm: 0.3 },
+  { id: "leela_ambience",     name: "The Leela Ambience Hotel",   category: "transport",     coordinates: [28.5022, 77.0912], nearestStationId: "dlf_phase_3",      distanceKm: 0.9 },
+  { id: "huda_market_43",     name: "HUDA Market Sector 43",      category: "shopping",      coordinates: [28.4568, 77.0971], nearestStationId: "sector_42_43",     distanceKm: 0.3 },
+  { id: "sector_54_market",   name: "Sector 54 Market",           category: "shopping",      coordinates: [28.4332, 77.1048], nearestStationId: "sector_54_chowk",  distanceKm: 0.2 },
+  { id: "sheetla_mata_temple",name: "Sheetla Mata Temple",        category: "religious",     coordinates: [28.4501, 77.0929], nearestStationId: "sector_42_43",     distanceKm: 0.8 },
+  { id: "mg_road_gurugram",   name: "MG Road Shopping Strip",     category: "shopping",      coordinates: [28.4748, 77.0692], nearestStationId: "sikanderpur",      distanceKm: 1.5 },
+  { id: "imt_manesar",        name: "IMT Manesar Industrial Area",category: "civic",         coordinates: [28.3512, 76.9382], nearestStationId: "sector_55_56",     distanceKm: 10.0 },
+  { id: "tau_devi_lal_stadium",name:"Tau Devi Lal Stadium",       category: "sports",        coordinates: [28.4572, 77.0298], nearestStationId: "sector_42_43",     distanceKm: 4.5 },
+  { id: "paras_hospital",     name: "Paras Hospital Gurugram",    category: "hospital",      coordinates: [28.4631, 77.0741], nearestStationId: "dlf_phase_1",      distanceKm: 1.8 },
+  { id: "medanta_hospital",   name: "Medanta — The Medicity",     category: "hospital",      coordinates: [28.4158, 77.0402], nearestStationId: "sector_55_56",     distanceKm: 3.8 },
+  { id: "rapid_metro_depot",  name: "Rapid Metro Depot",          category: "transport",     coordinates: [28.4195, 77.1088], nearestStationId: "sector_55_56",     distanceKm: 0.5 },
+  { id: "golf_course_road",   name: "Golf Course Road",           category: "park",          coordinates: [28.4528, 77.1028], nearestStationId: "sector_53_54",     distanceKm: 0.4 },
+  { id: "garden_galleria",    name: "Garden Galleria Mall",       category: "shopping",      coordinates: [28.4701, 77.0912], nearestStationId: "dlf_phase_1",      distanceKm: 0.3 },
+  { id: "world_mark_aerocity",name: "WorldMark Aerocity (nearby)",category: "transport",     coordinates: [28.5535, 77.0870], nearestStationId: "sikanderpur",      distanceKm: 8.0 },
+  { id: "cyber_park_unitech", name: "Unitech Business Park",      category: "education",     coordinates: [28.4869, 77.0941], nearestStationId: "belvedere_towers", distanceKm: 0.2 },
+];

@@ -1,0 +1,42 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "line": "yellow", "name": "Yellow Line (Operational)", "color": "#EAB308", "phase": "operational" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [78.0424, 27.1712], [78.0350, 27.1698], [78.0256, 27.1684],
+          [78.0178, 27.1684], [78.0113, 27.1775], [78.0179, 27.1775]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "yellow", "name": "Yellow Line (WIP)", "color": "#EAB308", "phase": "wip", "dashArray": "8,6" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [78.0179, 27.1775], [78.0019, 27.1821], [79.9925, 27.1868],
+          [79.9840, 27.1920], [79.9762, 27.1975], [79.9689, 27.2038],
+          [79.9615, 27.2102], [79.9543, 27.2168]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "line": "blue", "name": "Blue Line (WIP)", "color": "#3B82F6", "phase": "wip", "dashArray": "8,6" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [78.0081, 27.1559], [78.0015, 27.1623], [79.9952, 27.1682],
+          [79.9888, 27.1745], [79.9834, 27.1808], [79.9887, 27.1858],
+          [79.9925, 27.1868], [79.9934, 27.1921], [79.9982, 27.1983],
+          [80.0038, 27.2048], [80.0092, 27.2104], [80.0148, 27.2162],
+          [80.0201, 27.2219], [80.0255, 27.2278]
+        ]
+      }
+    }
+  ]
+}

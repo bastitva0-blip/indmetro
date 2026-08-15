@@ -1,0 +1,1 @@
+export { kanpurConfig } from "./config";
