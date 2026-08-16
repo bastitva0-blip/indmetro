@@ -24,6 +24,7 @@ import JourneyMode from "@/components/JourneyMode";
 import ThemeToggle from "@/components/ThemeToggle";
 import { cn, getISTDate } from "@/lib/utils";
 import type { GenericSchedule } from "@/lib/trainSimulation";
+import { getActiveTrains, getCurrentISTMinutes } from "@/lib/trainSimulation";
 import type { GenericStation } from "@/components/GenericCityMap";
 
 const GenericCityMap = lazy(() => import("@/components/GenericCityMap"));
@@ -87,7 +88,7 @@ interface JourneyTrackerHook {
   requestNotificationPermission: () => Promise<void>;
 }
 
-type PanelTab = "route" | "stations" | "live" | null;
+type PanelTab = "route" | "stations" | "cocommute" | "live" | null;
 
 export function CityApp({
   cityName,
@@ -268,8 +269,8 @@ export function CityApp({
           <DockBtn icon={<Menu className="h-5 w-5" />} label="Menu" onClick={() => setMenuOpen(true)} />
           <DockBtn icon={<Route className="h-5 w-5" />} label="Plan Route" active={activeTab === "route"} onClick={() => setActiveTab(activeTab === "route" ? null : "route")} />
           <DockBtn icon={<ListTree className="h-5 w-5" />} label="Stations" active={activeTab === "stations"} onClick={() => setActiveTab(activeTab === "stations" ? null : "stations")} />
-          <DockBtn icon={<Users className="h-5 w-5" />} label="Co-Commute" active={activeTab === "live"} onClick={() => setActiveTab(activeTab === "live" ? null : "live")} />
-          <DockBtn icon={<Train className="h-5 w-5" />} label="Live" active={false} onClick={() => setActiveTab(activeTab === "route" ? null : "route")} />
+          <DockBtn icon={<Users className="h-5 w-5" />} label="Co-Commute" active={activeTab === "cocommute"} onClick={() => setActiveTab(activeTab === "cocommute" ? null : "cocommute")} />
+          <DockBtn icon={<Train className="h-5 w-5" />} label="Live" active={activeTab === "live"} onClick={() => setActiveTab(activeTab === "live" ? null : "live")} />
         </div>
       </div>
 
@@ -280,7 +281,8 @@ export function CityApp({
             <DrawerTitle>
               {activeTab === "route" && "Plan your journey"}
               {activeTab === "stations" && `${cityName} Metro stations`}
-              {activeTab === "live" && "Co-Commute"}
+              {activeTab === "cocommute" && "Co-Commute"}
+              {activeTab === "live" && "Live Trains"}
             </DrawerTitle>
           </DrawerHeader>
 
@@ -430,8 +432,8 @@ export function CityApp({
               </div>
             )}
 
-            {/* ── Co-commute placeholder ──────────────────────── */}
-            {activeTab === "live" && (
+            {/* ── Co-Commute ────────────────────────────────────── */}
+            {activeTab === "cocommute" && (
               <div className="text-center py-8 text-muted-foreground text-sm">
                 <Users className="h-10 w-10 mx-auto mb-3 opacity-30" />
                 <p className="font-medium">Co-Commute</p>
@@ -439,11 +441,154 @@ export function CityApp({
                 <p className="text-xs mt-1 opacity-60">Coming soon for {cityName}</p>
               </div>
             )}
+
+            {/* ── Live trains board ─────────────────────────────── */}
+            {activeTab === "live" && (
+              <LiveBoard
+                schedules={schedules}
+                stations={stations}
+                lineColors={lineColors}
+                lineNames={lineNames}
+                lineTerminals={lineTerminals}
+                isOperatingNow={isOperatingNow}
+              />
+            )}
           </div>
         </DrawerContent>
       </Drawer>
 
       <SideMenu open={menuOpen} onOpenChange={setMenuOpen} onOpenTips={() => {}} />
+    </div>
+  );
+}
+
+// ── LiveBoard ─────────────────────────────────────────────────────────────────
+
+function LiveBoard({
+  schedules, stations, lineColors, lineNames, lineTerminals, isOperatingNow,
+}: {
+  schedules: GenericSchedule[];
+  stations: Record<string, GenericStation>;
+  lineColors: Record<string, string>;
+  lineNames: Record<string, string>;
+  lineTerminals: Record<string, { start: string; end: string }>;
+  isOperatingNow: boolean;
+}) {
+  const [now, setNow] = useState(() => getCurrentISTMinutes());
+
+  useEffect(() => {
+    const t = setInterval(() => setNow(getCurrentISTMinutes()), 5000);
+    return () => clearInterval(t);
+  }, []);
+
+  const active = getActiveTrains(schedules, stations, now);
+
+  if (!isOperatingNow) {
+    return (
+      <div className="text-center py-10 text-muted-foreground">
+        <Train className="h-10 w-10 mx-auto mb-3 opacity-30" />
+        <p className="font-medium">Service not running</p>
+        <p className="text-xs mt-1">Metro operates 06:00 – 22:00</p>
+      </div>
+    );
+  }
+
+  if (active.length === 0) {
+    return (
+      <div className="text-center py-10 text-muted-foreground">
+        <Train className="h-10 w-10 mx-auto mb-3 opacity-30" />
+        <p className="font-medium">No trains detected</p>
+        <p className="text-xs mt-1">Updates every 5 seconds</p>
+      </div>
+    );
+  }
+
+  // Group by line
+  const byLine: Record<string, typeof active> = {};
+  active.forEach((t) => {
+    const line = t.schedule.line;
+    if (!byLine[line]) byLine[line] = [];
+    byLine[line].push(t);
+  });
+
+  return (
+    <div className="space-y-4 pb-2">
+      <p className="text-xs text-muted-foreground text-center">
+        {active.length} train{active.length !== 1 ? "s" : ""} running · updates every 5s
+      </p>
+
+      {Object.entries(byLine).map(([line, trains]) => {
+        const color = lineColors[line] ?? "#888";
+        const name = lineNames[line] ?? line;
+        const terminal = lineTerminals[line];
+
+        return (
+          <div key={line}>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="h-2.5 w-2.5 rounded-full" style={{ background: color }} />
+              <p className="text-xs font-semibold uppercase tracking-wider">{name}</p>
+              <span className="text-xs text-muted-foreground ml-auto">{trains.length} trains</span>
+            </div>
+
+            <div className="space-y-2">
+              {trains.map(({ schedule, position }) => {
+                const isAtStation = position.status === "at_station";
+                const locationLabel = isAtStation
+                  ? `At ${stations[position.stationId!]?.name ?? "—"}`
+                  : `${stations[position.fromStationId!]?.name ?? "—"} → ${stations[position.toStationId!]?.name ?? "—"}`;
+
+                const dir = schedule.direction === "forward" ? "→" : "←";
+                const terminalName = schedule.direction === "forward"
+                  ? stations[terminal?.end]?.name
+                  : stations[terminal?.start]?.name;
+
+                const progress = position.progress ?? (isAtStation ? 1 : 0);
+
+                return (
+                  <div
+                    key={schedule.id}
+                    className="bg-card border border-border rounded-xl px-3 py-2.5"
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <div className="flex items-center gap-1.5">
+                        <span
+                          className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white"
+                          style={{ background: color }}
+                        >
+                          {schedule.id.split("-")[2] ?? "—"}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {dir} {terminalName ?? "Terminal"}
+                        </span>
+                      </div>
+                      <span className={cn(
+                        "text-[10px] px-2 py-0.5 rounded-full font-medium",
+                        isAtStation
+                          ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                          : "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
+                      )}>
+                        {isAtStation ? "At station" : "In transit"}
+                      </span>
+                    </div>
+
+                    <p className="text-sm font-medium truncate">{locationLabel}</p>
+
+                    {/* Progress bar between stations */}
+                    {!isAtStation && (
+                      <div className="mt-2 h-1 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-1000"
+                          style={{ width: `${Math.round(progress * 100)}%`, background: color }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
