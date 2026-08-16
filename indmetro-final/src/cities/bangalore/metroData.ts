@@ -206,3 +206,5 @@ export const getOrganizedStations = () =>
     lineName: LINE_NAMES[line],
     stations: LINE_STATIONS[line].map((id) => stations[id]).filter(Boolean),
   }));
+
+export const OPERATIONAL_STATIONS = ALL_STATIONS;

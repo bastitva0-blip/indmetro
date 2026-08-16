@@ -268,3 +268,7 @@ export const getStationOptions = (includeWIP = false): Station[] =>
   Object.values(stations)
     .filter(s => includeWIP || !s.isWIP)
     .sort((a, b) => a.name.localeCompare(b.name));
+
+export const LINE_TERMINALS: Record<"yellow", { start: string; end: string }> = {
+  yellow: { start: "devi_ahilya_terminal", end: "airport_indore" },
+};

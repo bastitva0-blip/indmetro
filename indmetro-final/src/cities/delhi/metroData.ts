@@ -494,3 +494,6 @@ export const getOrganizedStations = () =>
     lineName: LINE_NAMES[line],
     stations: LINE_STATIONS[line].map((id) => stations[id]).filter(Boolean),
   }));
+
+// All Delhi stations are operational
+export const OPERATIONAL_STATIONS = new Set(Object.keys(stations as Record<string, unknown>));
