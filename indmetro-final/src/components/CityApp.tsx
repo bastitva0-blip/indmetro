@@ -8,7 +8,7 @@
  *  - "X trains running" pill top-left
  *  - Drawer bottom panel: Menu | Plan Route | Stations | Co-Commute | Live
  */
-import { useState, useCallback, lazy, Suspense } from "react";
+import { useState, useCallback, lazy, Suspense, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Navigation, X, Route, ListTree, Users, Menu, Train } from "lucide-react";
 import {
