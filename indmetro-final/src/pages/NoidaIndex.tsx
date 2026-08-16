@@ -11,13 +11,17 @@ import type { GenericStation } from "@/components/GenericCityMap";
 import type { GenericSchedule } from "@/lib/trainSimulation";
 
 const schedules = getAllSchedules() as unknown as GenericSchedule[];
+const crowdEmoji = (level: string) =>
+  level === "low" ? "🟢" : level === "moderate" ? "🟡" : level === "high" ? "🟠" : "🔴";
 
 export default function NoidaIndex() {
+  const primaryColor = LINE_COLORS["aqua" as keyof typeof LINE_COLORS]
+    ?? Object.values(LINE_COLORS)[0];
   return (
     <CityApp
       cityName="Noida"
       citySlug="noida"
-      primaryColor={LINE_COLORS.blue ?? "#6b7280"}
+      primaryColor={primaryColor}
       mapCenter={[28.535, 77.391]}
       mapZoom={12}
       stations={stations as unknown as Record<string, GenericStation>}
@@ -28,12 +32,11 @@ export default function NoidaIndex() {
       operationalStations={OPERATIONAL_STATIONS}
       schedules={schedules}
       planRoute={(o, d) => planRoute(o, d) as any}
-      getNextTrains={(stationId, line, dir, count) =>
-        getNextTrainsAtStation(stationId, line as any, dir, count) as any
-      }
+      getNextTrains={(stationId, _line, dir, count) =>
+        getNextTrainsAtStation(stationId, dir, count) as any}
       getCrowd={(id) => {
         const c = getCrowdEstimate(id);
-        return c ? { level: c.level, emoji: c.emoji ?? "🚇" } : null;
+        return c ? { level: c.level, emoji: crowdEmoji(c.level) } : null;
       }}
       useJourneyTracker={useJourneyTracker as any}
     />

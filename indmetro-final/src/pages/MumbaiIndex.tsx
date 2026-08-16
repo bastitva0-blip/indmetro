@@ -11,13 +11,17 @@ import type { GenericStation } from "@/components/GenericCityMap";
 import type { GenericSchedule } from "@/lib/trainSimulation";
 
 const schedules = getAllSchedules() as unknown as GenericSchedule[];
+const crowdEmoji = (level: string) =>
+  level === "low" ? "🟢" : level === "moderate" ? "🟡" : level === "high" ? "🟠" : "🔴";
 
 export default function MumbaiIndex() {
+  const primaryColor = LINE_COLORS["line1" as keyof typeof LINE_COLORS]
+    ?? Object.values(LINE_COLORS)[0];
   return (
     <CityApp
       cityName="Mumbai"
       citySlug="mumbai"
-      primaryColor={LINE_COLORS.red ?? "#6b7280"}
+      primaryColor={primaryColor}
       mapCenter={[19.076, 72.877]}
       mapZoom={12}
       stations={stations as unknown as Record<string, GenericStation>}
@@ -29,11 +33,10 @@ export default function MumbaiIndex() {
       schedules={schedules}
       planRoute={(o, d) => planRoute(o, d) as any}
       getNextTrains={(stationId, line, dir, count) =>
-        getNextTrainsAtStation(stationId, line as any, dir, count) as any
-      }
+        getNextTrainsAtStation(stationId, line as any, dir, count) as any}
       getCrowd={(id) => {
         const c = getCrowdEstimate(id);
-        return c ? { level: c.level, emoji: c.emoji ?? "🚇" } : null;
+        return c ? { level: c.level, emoji: crowdEmoji(c.level) } : null;
       }}
       useJourneyTracker={useJourneyTracker as any}
     />

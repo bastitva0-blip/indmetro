@@ -11,13 +11,17 @@ import type { GenericStation } from "@/components/GenericCityMap";
 import type { GenericSchedule } from "@/lib/trainSimulation";
 
 const schedules = getAllSchedules() as unknown as GenericSchedule[];
+const crowdEmoji = (level: string) =>
+  level === "low" ? "🟢" : level === "moderate" ? "🟡" : level === "high" ? "🟠" : "🔴";
 
 export default function KanpurIndex() {
+  const primaryColor = LINE_COLORS["orange" as keyof typeof LINE_COLORS]
+    ?? Object.values(LINE_COLORS)[0];
   return (
     <CityApp
       cityName="Kanpur"
       citySlug="kanpur"
-      primaryColor={LINE_COLORS.orange}
+      primaryColor={primaryColor}
       mapCenter={[26.468, 80.340]}
       mapZoom={12}
       stations={stations as unknown as Record<string, GenericStation>}
@@ -29,14 +33,11 @@ export default function KanpurIndex() {
       schedules={schedules}
       planRoute={(o, d) => planRoute(o, d) as any}
       getNextTrains={(stationId, line, dir, count) =>
-        getNextTrainsAtStation(stationId, line as any, dir, count) as any
-      }
+        getNextTrainsAtStation(stationId, line as any, dir, count) as any}
       getCrowd={(id) => {
         const c = getCrowdEstimate(id);
-        return c ? { level: c.level, emoji: c.emoji ?? "🚇" } : null;
+        return c ? { level: c.level, emoji: crowdEmoji(c.level) } : null;
       }}
-      smartCardName="GoSmart Card"
-      smartCardDiscount={0.1}
       useJourneyTracker={useJourneyTracker as any}
     />
   );

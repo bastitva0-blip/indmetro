@@ -11,13 +11,17 @@ import type { GenericStation } from "@/components/GenericCityMap";
 import type { GenericSchedule } from "@/lib/trainSimulation";
 
 const schedules = getAllSchedules() as unknown as GenericSchedule[];
+const crowdEmoji = (level: string) =>
+  level === "low" ? "🟢" : level === "moderate" ? "🟡" : level === "high" ? "🟠" : "🔴";
 
 export default function IndoreIndex() {
+  const primaryColor = LINE_COLORS["yellow" as keyof typeof LINE_COLORS]
+    ?? Object.values(LINE_COLORS)[0];
   return (
     <CityApp
       cityName="Indore"
       citySlug="indore"
-      primaryColor={LINE_COLORS.red ?? "#6b7280"}
+      primaryColor={primaryColor}
       mapCenter={[22.719, 75.857]}
       mapZoom={12}
       stations={stations as unknown as Record<string, GenericStation>}
@@ -28,12 +32,11 @@ export default function IndoreIndex() {
       operationalStations={OPERATIONAL_STATIONS}
       schedules={schedules}
       planRoute={(o, d) => planRoute(o, d) as any}
-      getNextTrains={(stationId, line, dir, count) =>
-        getNextTrainsAtStation(stationId, line as any, dir, count) as any
-      }
+      getNextTrains={(stationId, _line, dir, count) =>
+        getNextTrainsAtStation(stationId, dir === "forward" ? "clockwise" : "anticlockwise", count) as any}
       getCrowd={(id) => {
         const c = getCrowdEstimate(id);
-        return c ? { level: c.level, emoji: c.emoji ?? "🚇" } : null;
+        return c ? { level: c.level, emoji: crowdEmoji(c.level) } : null;
       }}
       useJourneyTracker={useJourneyTracker as any}
     />
