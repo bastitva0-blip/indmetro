@@ -2,7 +2,8 @@
  * GenericCityMap — a city-agnostic Leaflet map for any Indian metro.
  * Draws lines, station markers, highlights a route, and animates live trains.
  */
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
+import "leaflet/dist/leaflet.css";
 import { trainIconSvg, stationIconSvg, interchangeStationIconSvg } from "@/lib/leafletIcons";
 import {
   GenericSchedule,
@@ -156,6 +157,8 @@ export const GenericCityMap = ({
       });
 
       mapRef.current = map;
+      // Force Leaflet to recalculate container size after React paint
+      setTimeout(() => map.invalidateSize(), 50);
       forceRender((n) => n + 1);
     });
 
