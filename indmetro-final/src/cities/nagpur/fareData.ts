@@ -42,3 +42,6 @@ export const calculateFare = (distKm: number, hasCard = false): number => {
   const base = getFare(Math.max(0.01, distKm));
   return hasCard ? Math.round(base * 0.9) : base;
 };
+
+/** Alias for CityApp compatibility */
+export const FARE_SLABS = FARE_ZONES.map(z => ({ minKm: z.minKm, maxKm: z.maxKm, fare: z.fare }));

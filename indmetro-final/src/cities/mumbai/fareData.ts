@@ -71,3 +71,6 @@ export const calculateFare = (
   }
   return hasCard ? Math.round(base * 0.9) : base;
 };
+
+/** Alias for CityApp compatibility — uses MMRDA (Line 2A/7/9) distance slabs as reference */
+export const FARE_SLABS = MMRDA_ZONES.map(z => ({ minKm: z.minKm, maxKm: z.maxKm, fare: z.fare }));

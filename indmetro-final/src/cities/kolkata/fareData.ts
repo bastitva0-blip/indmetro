@@ -48,3 +48,6 @@ const calcFare=(distKm:number,zones:FareZone[],hasCard:boolean):number=>{
 
 export const calculateFare=(distKm:number,line:"blue"|"green"|"orange"|"purple",hasCard=false):number=>
   calcFare(Math.max(0.01,distKm), line==="blue"?BLUE_FARES:KMRC_FARES, hasCard);
+
+/** Alias for CityApp compatibility — uses Blue Line fares as reference */
+export const FARE_SLABS = BLUE_FARES.map(z => ({ minKm: z.minKm, maxKm: z.maxKm, fare: z.fare }));

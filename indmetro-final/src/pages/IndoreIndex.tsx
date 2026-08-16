@@ -51,7 +51,7 @@ export default function IndoreIndex() {
       localPlaces={localPlaces as any}
       planRoute={(o, d) => planRoute(o, d) as any}
       getNextTrains={(stationId, line, dir, count) =>
-        getNextTrainsAtStation(stationId, line as any, dir, count) as any}
+        getNextTrainsAtStation(stationId, dir, count) as any}
       getCrowd={(id) => {
         const c = getCrowdEstimate(id);
         return c ? { level: c.level, emoji: crowdEmoji(c.level) } : null;

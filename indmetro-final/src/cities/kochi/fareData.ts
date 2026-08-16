@@ -69,3 +69,6 @@ export const buildFareMatrix = (): Record<string, Record<string, number>> => {
   }
   return matrix;
 };
+
+/** Alias for CityApp compatibility */
+export const FARE_SLABS = FARE_ZONES.map(z => ({ minKm: z.minKm, maxKm: z.maxKm, fare: z.fare }));

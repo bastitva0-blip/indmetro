@@ -103,3 +103,11 @@ export const calculateFareByStops = (stopCount: number, hasSmartCard = false): n
   else base = 30;
   return hasSmartCard ? applySmartCardDiscount(base) : base;
 };
+
+/** Approximate FARE_SLABS for CityApp compatibility (derived from JMRC fare matrix by stop distance) */
+export const FARE_SLABS = [
+  { minKm: 0,  maxKm: 3,  fare: 10 },
+  { minKm: 3,  maxKm: 6,  fare: 15 },
+  { minKm: 6,  maxKm: 10, fare: 25 },
+  { minKm: 10, maxKm: Infinity, fare: 30 },
+];
