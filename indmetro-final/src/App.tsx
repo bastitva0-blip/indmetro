@@ -6,6 +6,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { lazy, Suspense } from "react";
 import NotFound from "@/pages/NotFound";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
+import { UpdatePrompt } from "@/components/UpdatePrompt";
 
 const CityPicker    = lazy(() => import("@/pages/CityPicker"));
 const LucknowApp    = lazy(() => import("@/pages/LucknowApp"));
@@ -43,6 +44,7 @@ function App() {
         <GoSmartCardProvider>
           <TooltipProvider delayDuration={200}>
             <BrowserRouter>
+              <UpdatePrompt />
               <OnboardingFlow>
                 <Suspense fallback={<Spinner />}>
                   <Routes>

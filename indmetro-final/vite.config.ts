@@ -13,8 +13,8 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     VitePWA({
-      registerType: "prompt",
-      injectRegister: "script",
+      registerType: "autoUpdate",
+      injectRegister: "auto",
       includeAssets: ["favicon.ico", "metroRoutes.geojson"],
       manifest: {
         id: "/",
@@ -70,6 +70,8 @@ export default defineConfig(({ mode }) => ({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2,geojson,json}"],
         navigateFallback: "/index.html",
         navigateFallbackDenylist: [/^\/api/],
