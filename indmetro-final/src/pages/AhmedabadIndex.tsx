@@ -1,4 +1,5 @@
 import { CityApp } from "@/components/CityApp";
+import type { CityTipsConfig } from "@/components/CityApp";
 import {
   stations, LINE_STATIONS, LINE_COLORS, LINE_NAMES,
   LINE_TERMINALS, OPERATIONAL_STATIONS,
@@ -6,6 +7,8 @@ import {
 import { getAllSchedules, getNextTrainsAtStation } from "@/cities/ahmedabad/timetable";
 import { planRoute } from "@/cities/ahmedabad/routePlanner";
 import { getCrowdEstimate } from "@/cities/ahmedabad/crowdSimulation";
+import { FARE_SLABS } from "@/cities/ahmedabad/fareData";
+import { localPlaces } from "@/cities/ahmedabad/localPlaces";
 import { useJourneyTracker } from "@/hooks/use-journey-tracker-ahmedabad";
 import type { GenericStation } from "@/components/GenericCityMap";
 import type { GenericSchedule } from "@/lib/trainSimulation";
@@ -14,15 +17,28 @@ const schedules = getAllSchedules() as unknown as GenericSchedule[];
 const crowdEmoji = (level: string) =>
   level === "low" ? "🟢" : level === "moderate" ? "🟡" : level === "high" ? "🟠" : "🔴";
 
+const tipsConfig: CityTipsConfig = {
+  fareSlabs: FARE_SLABS as any,
+  smartCardName: "GMRC Smart Card",
+  smartCardDiscount: 0.10,
+  smartCardDeposit: 50,
+  childFreeHeightCm: 90,
+  firstTrain: "06:00",
+  lastTrain: "23:00",
+  peakHeadwayMinutes: 5,
+  offPeakHeadwayMinutes: 10,
+};
+
 export default function AhmedabadIndex() {
-  const primaryColor = LINE_COLORS["blue" as keyof typeof LINE_COLORS]
-    ?? Object.values(LINE_COLORS)[0];
+  const primaryColor =
+    LINE_COLORS["blue" as keyof typeof LINE_COLORS] ??
+    Object.values(LINE_COLORS)[0];
   return (
     <CityApp
       cityName="Ahmedabad"
       citySlug="ahmedabad"
       primaryColor={primaryColor}
-      mapCenter={[23.030, 72.587]}
+      mapCenter={[23.02, 72.57]}
       mapZoom={12}
       stations={stations as unknown as Record<string, GenericStation>}
       lineStations={LINE_STATIONS}
@@ -31,6 +47,8 @@ export default function AhmedabadIndex() {
       lineTerminals={LINE_TERMINALS}
       operationalStations={OPERATIONAL_STATIONS}
       schedules={schedules}
+      tipsConfig={tipsConfig}
+      localPlaces={localPlaces as any}
       planRoute={(o, d) => planRoute(o, d) as any}
       getNextTrains={(stationId, line, dir, count) =>
         getNextTrainsAtStation(stationId, line as any, dir, count) as any}

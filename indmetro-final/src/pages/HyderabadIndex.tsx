@@ -1,4 +1,5 @@
 import { CityApp } from "@/components/CityApp";
+import type { CityTipsConfig } from "@/components/CityApp";
 import {
   stations, LINE_STATIONS, LINE_COLORS, LINE_NAMES,
   LINE_TERMINALS, OPERATIONAL_STATIONS,
@@ -6,6 +7,8 @@ import {
 import { getAllSchedules, getNextTrainsAtStation } from "@/cities/hyderabad/timetable";
 import { planRoute } from "@/cities/hyderabad/routePlanner";
 import { getCrowdEstimate } from "@/cities/hyderabad/crowdSimulation";
+import { FARE_SLABS } from "@/cities/hyderabad/fareData";
+import { localPlaces } from "@/cities/hyderabad/localPlaces";
 import { useJourneyTracker } from "@/hooks/use-journey-tracker-hyderabad";
 import type { GenericStation } from "@/components/GenericCityMap";
 import type { GenericSchedule } from "@/lib/trainSimulation";
@@ -14,15 +17,28 @@ const schedules = getAllSchedules() as unknown as GenericSchedule[];
 const crowdEmoji = (level: string) =>
   level === "low" ? "🟢" : level === "moderate" ? "🟡" : level === "high" ? "🟠" : "🔴";
 
+const tipsConfig: CityTipsConfig = {
+  fareSlabs: FARE_SLABS as any,
+  smartCardName: "Tspay Card",
+  smartCardDiscount: 0.10,
+  smartCardDeposit: 50,
+  childFreeHeightCm: 90,
+  firstTrain: "06:00",
+  lastTrain: "22:00",
+  peakHeadwayMinutes: 3.5,
+  offPeakHeadwayMinutes: 7,
+};
+
 export default function HyderabadIndex() {
-  const primaryColor = LINE_COLORS["red" as keyof typeof LINE_COLORS]
-    ?? Object.values(LINE_COLORS)[0];
+  const primaryColor =
+    LINE_COLORS["red" as keyof typeof LINE_COLORS] ??
+    Object.values(LINE_COLORS)[0];
   return (
     <CityApp
       cityName="Hyderabad"
       citySlug="hyderabad"
       primaryColor={primaryColor}
-      mapCenter={[17.385, 78.487]}
+      mapCenter={[17.385, 78.486]}
       mapZoom={12}
       stations={stations as unknown as Record<string, GenericStation>}
       lineStations={LINE_STATIONS}
@@ -31,6 +47,8 @@ export default function HyderabadIndex() {
       lineTerminals={LINE_TERMINALS}
       operationalStations={OPERATIONAL_STATIONS}
       schedules={schedules}
+      tipsConfig={tipsConfig}
+      localPlaces={localPlaces as any}
       planRoute={(o, d) => planRoute(o, d) as any}
       getNextTrains={(stationId, line, dir, count) =>
         getNextTrainsAtStation(stationId, line as any, dir, count) as any}

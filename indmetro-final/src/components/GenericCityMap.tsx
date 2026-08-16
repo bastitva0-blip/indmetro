@@ -2,7 +2,7 @@
  * GenericCityMap — a city-agnostic Leaflet map for any Indian metro.
  * Draws lines, station markers, highlights a route, and animates live trains.
  */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import "leaflet/dist/leaflet.css";
 import { trainIconSvg, stationIconSvg, interchangeStationIconSvg } from "@/lib/leafletIcons";
 import {
@@ -10,6 +10,8 @@ import {
   getActiveTrains,
   getCurrentISTMinutes,
 } from "@/lib/trainSimulation";
+import { useGeolocation } from "@/hooks/use-geolocation";
+import { findNearestStation } from "@/lib/nearestStation";
 
 export interface GenericStation {
   id: string;
@@ -34,6 +36,7 @@ interface GenericCityMapProps {
   highlightRouteIds?: string[] | null;
   onStationClick?: (stationId: string) => void;
   onActiveTrainCount?: (count: number) => void;
+  onNearestStationFound?: (stationId: string, distanceKm: number, walkingMinutes: number) => void;
 }
 
 const buildIcon = (
@@ -77,6 +80,7 @@ export const GenericCityMap = ({
   highlightRouteIds,
   onStationClick,
   onActiveTrainCount,
+  onNearestStationFound,
 }: GenericCityMapProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<import("leaflet").Map | null>(null);
@@ -84,6 +88,23 @@ export const GenericCityMap = ({
   const trainMarkersRef = useRef<Map<string, import("leaflet").Marker>>(new Map());
   const highlightLayerRef = useRef<import("leaflet").Polyline | null>(null);
   const [, forceRender] = useState(0);
+  const nearestFiredRef = useRef(false);
+
+  // Geolocation → nearest station
+  const geo = useGeolocation();
+  useEffect(() => {
+    if (nearestFiredRef.current) return;
+    if (!geo.coordinates || !onNearestStationFound) return;
+    try {
+      const nearest = findNearestStation(geo.coordinates);
+      if (nearest) {
+        nearestFiredRef.current = true;
+        onNearestStationFound(nearest.station.id, nearest.distanceKm, nearest.walkingMinutes);
+      }
+    } catch {
+      // findNearestStation may not work for all cities — silently ignore
+    }
+  }, [geo.coordinates, onNearestStationFound]);
 
   // Init map once
   useEffect(() => {
