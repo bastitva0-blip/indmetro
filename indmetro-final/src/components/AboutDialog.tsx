@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrainFront, ShieldCheck, ExternalLink, Linkedin, Heart } from "lucide-react";
+import { TrainFront, ShieldCheck, ExternalLink, Linkedin, Heart, Globe } from "lucide-react";
 
 interface AboutDialogProps {
   open: boolean;
@@ -15,7 +15,7 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
           <DialogTitle className="flex items-center gap-2">
             <TrainFront className="h-5 w-5 text-primary" /> About IndMetro
           </DialogTitle>
-          <DialogDescription>Why this exists, and what it does with your data.</DialogDescription>
+          <DialogDescription>India's unified metro companion — all 21 cities, one app.</DialogDescription>
         </DialogHeader>
 
         <Tabs defaultValue="why">
@@ -27,21 +27,22 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
 
           <TabsContent value="why" className="space-y-3 text-sm text-muted-foreground leading-relaxed">
             <p>
-              IndMetro covers all 21 Indian metro systems. If you just want to know
-              when your train arrives or what the fare is, the options are not great.
-              The official site is built for announcements, and generic map apps do not
-              understand metro-specific things like fare slabs, train headways, or
-              which stations are underground.
+              India now has 21 metro systems across cities as different as Lucknow,
+              Kochi, and Delhi. Every city has its own fares, headways, smart card,
+              and quirks — but there is no single app that handles all of them well.
+              Official sites are built for press releases, not commuters.
             </p>
             <p>
-              <strong className="text-foreground">IndMetro</strong> focuses on the
-              three things a rider actually needs: when the next train is, what the
-              fare will be, and the fastest route there. No ads, no clutter, and it
-              works offline.
+              <strong className="text-foreground">IndMetro</strong> gives every city
+              the same three things a rider actually needs: when the next train is,
+              what the fare will be, and the fastest route there. City-specific smart
+              card names, fare slabs, peak hours, interchange logic — all handled
+              correctly, per city.
             </p>
             <p>
-              It is an independent project, not affiliated with UPMRC. See the Privacy
-              tab for what that means for your data.
+              No ads, no accounts, no clutter. Works fully offline once loaded.
+              IndMetro is an independent project, not affiliated with any metro
+              authority.
             </p>
           </TabsContent>
 
@@ -49,40 +50,34 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
             <div className="flex gap-2.5 rounded-lg bg-secondary/30 p-3">
               <ShieldCheck className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
               <p>
-                This app does not represent a government entity. Timings and fares are sourced
-                from the official{" "}
-                <a
-                  href="https://lucknow.upmetrorail.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary underline underline-offset-2"
-                >
-                  UPMRC website
-                </a>
-                .
+                IndMetro is an independent app. It is not affiliated with UPMRC,
+                DMRC, BMRCL, or any other metro authority. Timings and fares are
+                sourced from each city's official operator website.
               </p>
             </div>
             <p>
               <strong className="text-foreground">No accounts, no servers.</strong> IndMetro
-              has no backend or database. Your GoSmart Card preference, balance tracker,
-              and theme choice are all stored in your browser and never sent anywhere.
+              has no backend or database of any kind. Your smart card preference,
+              balance tracker, journey history, and theme choice are all stored
+              locally in your browser and never sent anywhere.
             </p>
             <p>
               <strong className="text-foreground">Card balance tracker</strong> is a manual
-              log you control. It does not read your physical card (there is no public way
-              to do that) — it just keeps a running total based on amounts you enter
-              yourself, on this device only.
+              log you control entirely. It does not read your physical smart card —
+              it keeps a running total based on amounts you enter yourself,
+              on this device only.
             </p>
             <p>
-              <strong className="text-foreground">Location</strong> is only used, with
-              your permission, to find your nearest station. Your coordinates never leave
-              your device.
+              <strong className="text-foreground">Location</strong> is used only,
+              with your permission, to find your nearest station. Your coordinates
+              never leave your device.
             </p>
             <p>
-              Map tiles load from OpenStreetMap's public servers, which may log standard
-              request metadata like your IP per their own practices. We do not control that.
+              Map tiles load from OpenStreetMap's public servers, which may log
+              standard request metadata (like your IP) per their own practices.
+              We do not control that.
             </p>
-            <p>No analytics, no ads, no third-party trackers.</p>
+            <p>No analytics, no ads, no third-party trackers. Ever.</p>
           </TabsContent>
 
           <TabsContent value="credits" className="space-y-4">
@@ -92,24 +87,37 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
               </div>
               <p className="text-sm font-medium">Astitva Bhardwaj</p>
               <p className="text-xs text-muted-foreground">Designer &amp; developer of IndMetro</p>
-              <a
-                href="https://www.linkedin.com/in/astitva-bhardwajlu/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline mt-1"
-              >
-                <Linkedin className="h-3.5 w-3.5" /> LinkedIn <ExternalLink className="h-3 w-3" />
-              </a>
+              <div className="flex items-center justify-center gap-3 mt-1">
+                <a
+                  href="https://www.linkedin.com/in/astitva-bhardwajlu/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline"
+                >
+                  <Linkedin className="h-3.5 w-3.5" /> LinkedIn <ExternalLink className="h-3 w-3" />
+                </a>
+                <a
+                  href="https://indmetro.in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline"
+                >
+                  <Globe className="h-3.5 w-3.5" /> indmetro.in <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
             </div>
             <div className="flex items-start gap-2.5 rounded-lg bg-secondary/30 p-3 text-xs text-muted-foreground leading-relaxed">
               <Heart className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
               <p>
-                Built independently from scratch, covering route planning, live train simulation,
-                fare logic, offline support and the full map experience — because Lucknow
-                Metro riders deserved something better than the official site for
-                day-to-day commuting.
+                Built independently from scratch — route planning, live train simulation,
+                city-specific fare logic, offline PWA support, interactive maps, and
+                Journey Mode across all 21 Indian metro systems. Because every metro
+                rider in India deserves a commute app that actually works.
               </p>
             </div>
+            <p className="text-center text-xs text-muted-foreground">
+              Started as LkoMetro (Lucknow only) · Expanded to IndMetro v2 · 21 cities
+            </p>
           </TabsContent>
         </Tabs>
       </DialogContent>
