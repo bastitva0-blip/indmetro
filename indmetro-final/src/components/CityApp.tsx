@@ -38,7 +38,6 @@ import { QrShareSheet } from "@/components/QrShareSheet";
 import { StationDetailSheet } from "@/components/StationDetailSheet";
 import { MultiTripCalculator } from "@/components/MultiTripCalculator";
 import { haptics } from "@/lib/haptics";
-import { useRef, useCallback } from "react";
 import { cn, getISTDate } from "@/lib/utils";
 import type { GenericSchedule } from "@/lib/trainSimulation";
 import { getActiveTrains, getCurrentISTMinutes } from "@/lib/trainSimulation";
@@ -887,6 +886,36 @@ export function CityApp({
           tips={resolvedTips}
         />
       )}
+
+      {/* Feature 4: QR Share Sheet */}
+      {route && (
+        <QrShareSheet
+          open={qrOpen}
+          onClose={() => setQrOpen(false)}
+          citySlug={citySlug}
+          fromId={route.origin.id}
+          toId={route.destination.id}
+          fromName={route.origin.name}
+          toName={route.destination.name}
+          fare={route.discountedFare ?? route.fare}
+          durationMinutes={route.travelTimeMinutes}
+        />
+      )}
+
+      {/* Feature 22/23: Station Detail Sheet */}
+      <StationDetailSheet
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+        stationId={detailStationId}
+        stationName={detailStationId ? (stations[detailStationId]?.name ?? "") : ""}
+        lines={detailStationId ? (stations[detailStationId]?.lines ?? []) : []}
+        lineColors={lineColors}
+        lineNames={lineNames}
+        nextTrains={detailStationId && getNextTrains ? getNextTrains(detailStationId, "", "forward", 6) as any ?? [] : []}
+        crowdInfo={detailStationId && getCrowd ? getCrowd(detailStationId) : null}
+        onPlanFrom={(id) => { setOrigin(id); setActiveTab("route"); setDrawerOpen(true); }}
+        onPlanTo={(id) => { setDest(id); setActiveTab("route"); setDrawerOpen(true); }}
+      />
     </div>
   );
 }
@@ -1191,36 +1220,5 @@ const StationSelect = ({
     </select>
   </div>
 );
-
-      {/* Feature 4: QR Share Sheet */}
-      {route && (
-        <QrShareSheet
-          open={qrOpen}
-          onClose={() => setQrOpen(false)}
-          citySlug={citySlug}
-          fromId={route.origin.id}
-          toId={route.destination.id}
-          fromName={route.origin.name}
-          toName={route.destination.name}
-          fare={route.discountedFare ?? route.fare}
-          durationMinutes={route.travelTimeMinutes}
-        />
-      )}
-
-      {/* Feature 22/23: Station Detail Sheet */}
-      <StationDetailSheet
-        open={detailOpen}
-        onClose={() => setDetailOpen(false)}
-        stationId={detailStationId}
-        stationName={detailStationId ? (stations[detailStationId]?.name ?? "") : ""}
-        lines={detailStationId ? (stations[detailStationId]?.lines ?? []) : []}
-        lineColors={lineColors}
-        lineNames={lineNames}
-        nextTrains={detailStationId && getNextTrains ? getNextTrains(detailStationId, "", "forward", 6) as any ?? [] : []}
-        crowdInfo={detailStationId && getCrowd ? getCrowd(detailStationId) : null}
-        onPlanFrom={(id) => { setOrigin(id); setActiveTab("route"); setDrawerOpen(true); }}
-        onPlanTo={(id) => { setDest(id); setActiveTab("route"); setDrawerOpen(true); }}
-      />
-
 
 export default CityApp;
