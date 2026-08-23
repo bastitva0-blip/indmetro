@@ -898,7 +898,7 @@ export function CityApp({
           fromName={route.origin.name}
           toName={route.destination.name}
           fare={route.discountedFare ?? route.fare}
-          durationMinutes={route.travelTimeMinutes}
+          durationMinutes={route.durationMinutes}
         />
       )}
 
@@ -913,8 +913,8 @@ export function CityApp({
         lineNames={lineNames}
         nextTrains={detailStationId && getNextTrains ? getNextTrains(detailStationId, "", "forward", 6) as any ?? [] : []}
         crowdInfo={detailStationId && getCrowd ? getCrowd(detailStationId) : null}
-        onPlanFrom={(id) => { setOrigin(id); setActiveTab("route"); setDrawerOpen(true); }}
-        onPlanTo={(id) => { setDest(id); setActiveTab("route"); setDrawerOpen(true); }}
+        onPlanFrom={(id) => { setOrigin(id); setActiveTab("route"); }}
+        onPlanTo={(id) => { setDest(id); setActiveTab("route"); }}
       />
     </div>
   );
