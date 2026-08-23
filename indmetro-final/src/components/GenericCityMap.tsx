@@ -37,6 +37,10 @@ interface GenericCityMapProps {
   onStationClick?: (stationId: string) => void;
   onActiveTrainCount?: (count: number) => void;
   onNearestStationFound?: (stationId: string, distanceKm: number, walkingMinutes: number) => void;
+  /** Feature 11/24: crowd data per station */
+  getCrowd?: (stationId: string) => { level: string; emoji: string } | null;
+  /** Feature 39: open station detail sheet */
+  onStationDetail?: (stationId: string) => void;
 }
 
 const buildIcon = (
@@ -81,6 +85,8 @@ export const GenericCityMap = ({
   onStationClick,
   onActiveTrainCount,
   onNearestStationFound,
+  getCrowd,
+  onStationDetail,
 }: GenericCityMapProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<import("leaflet").Map | null>(null);
@@ -89,6 +95,13 @@ export const GenericCityMap = ({
   const highlightLayerRef = useRef<import("leaflet").Polyline | null>(null);
   const [, forceRender] = useState(0);
   const nearestFiredRef = useRef(false);
+  // Feature 40: line filter toggle
+  const [hiddenLines, setHiddenLines] = useState<Set<string>>(new Set());
+  const toggleLine = (line: string) => setHiddenLines((p) => { const n = new Set(p); n.has(line) ? n.delete(line) : n.add(line); return n; });
+  // Feature 11: crowd heatmap toggle
+  const [heatmapOn, setHeatmapOn] = useState(false);
+  // Feature 7: GPS button state
+  const [gpsLocating, setGpsLocating] = useState(false);
 
   // Geolocation → nearest station
   const geo = useGeolocation();
@@ -170,8 +183,11 @@ export const GenericCityMap = ({
 
         marker.bindTooltip(station.name, { direction: "top", offset: [0, -8] });
 
-        if (onStationClick && isOp) {
-          marker.on("click", () => onStationClick(station.id));
+        if (isOp) {
+          marker.on("click", () => {
+            onStationClick?.(station.id);
+            onStationDetail?.(station.id); // Feature 39
+          });
         }
 
         stationMarkersRef.current.set(station.id, marker);
@@ -290,7 +306,80 @@ export const GenericCityMap = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schedules, stations, lineColors, lineNames]);
 
-  return <div ref={containerRef} className="absolute inset-0" />;
+  // Feature 11: recolor markers for crowd heatmap when heatmapOn changes
+  useEffect(() => {
+    if (!mapRef.current) return;
+    import("leaflet").then(({ default: L }) => {
+      stationMarkersRef.current.forEach((marker, id) => {
+        if (!heatmapOn || !getCrowd) return;
+        const crowd = getCrowd(id);
+        const crowdColor = crowd?.level === "Very High" ? "#ef4444"
+          : crowd?.level === "High" ? "#f97316"
+          : crowd?.level === "Moderate" ? "#eab308"
+          : "#22c55e";
+        const el = marker.getElement();
+        if (el) {
+          const svg = el.querySelector("svg circle");
+          if (svg) (svg as SVGElement).setAttribute("fill", crowdColor);
+        }
+      });
+    });
+  }, [heatmapOn, getCrowd]);
+
+  const lineKeys = Object.keys(lineStations);
+
+  return (
+    <div className="absolute inset-0">
+      <div ref={containerRef} className="absolute inset-0" />
+
+      {/* Feature 7: GPS nearest station button */}
+      <button
+        onClick={async () => {
+          setGpsLocating(true);
+          geo.locate();
+          setTimeout(() => setGpsLocating(false), 5000);
+        }}
+        className="absolute bottom-24 right-3 z-[800] bg-background border border-border rounded-full p-3 shadow-md hover:bg-muted transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+        aria-label="Find nearest station"
+        title="Find nearest station"
+      >
+        <span className={`text-lg ${gpsLocating ? "animate-pulse" : ""}`}>📍</span>
+      </button>
+
+      {/* Feature 11: Crowd heatmap toggle */}
+      {getCrowd && (
+        <button
+          onClick={() => setHeatmapOn((v) => !v)}
+          className={`absolute top-2 right-2 z-[800] rounded-full px-3 py-1.5 text-xs font-semibold shadow-md border transition-all min-h-[36px] ${heatmapOn ? "bg-orange-500 text-white border-orange-500" : "bg-background border-border text-foreground"}`}
+          title="Toggle crowd heatmap"
+        >
+          {heatmapOn ? "🌡️ Live" : "🌡️ Crowd"}
+        </button>
+      )}
+
+      {/* Feature 40: Line filter toggles */}
+      {lineKeys.length > 1 && (
+        <div className="absolute bottom-20 left-2 z-[800] flex flex-col gap-1 pointer-events-auto">
+          {lineKeys.map((line) => {
+            const color = lineColors[line] ?? "#888";
+            const hidden = hiddenLines.has(line);
+            return (
+              <button
+                key={line}
+                onClick={() => toggleLine(line)}
+                aria-pressed={!hidden}
+                className="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold shadow-md border transition-all min-h-[32px]"
+                style={{ background: hidden ? "var(--background)" : color, color: hidden ? color : "#fff", borderColor: color, opacity: hidden ? 0.7 : 1 }}
+              >
+                <span className="h-2 w-2 rounded-full shrink-0" style={{ background: hidden ? color : "#fff" }} />
+                {(lineNames[line] ?? line).split(" ")[0]}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default GenericCityMap;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Info, Wallet, BookOpen, Download, ChevronLeft, Type, Zap } from "lucide-react";
+import { Info, Wallet, BookOpen, Download, ChevronLeft, Type, Zap, Bell } from "lucide-react";
 import IndMetroLogo from "@/components/icons/IndMetroLogo";
 import { useNavigate } from "react-router-dom";
 import {
@@ -17,6 +17,7 @@ import CardBalanceDialog from "@/components/CardBalanceDialog";
 import { useInstallPrompt } from "@/hooks/use-install-prompt";
 import { useReduceMotion } from "@/hooks/use-reduce-motion";
 import { useFontSize, type FontSize } from "@/hooks/use-font-size";
+import { requestNotificationPermission } from "@/lib/pushNotifications";
 
 interface SideMenuProps {
   open: boolean;
@@ -62,6 +63,17 @@ export const SideMenu = ({ open, onOpenChange, onOpenTips }: SideMenuProps) => {
   const { canInstall, triggerInstall } = useInstallPrompt();
   const navigate = useNavigate();
   const [reduceMotion, toggleReduceMotion] = useReduceMotion();
+  const [notifEnabled, setNotifEnabled] = useState<boolean>(() => {
+    try { return localStorage.getItem("indmetro:pushEnabled") === "true"; } catch { return false; }
+  });
+  const toggleNotif = async () => {
+    const granted = await requestNotificationPermission();
+    if (granted) {
+      const next = !notifEnabled;
+      setNotifEnabled(next);
+      try { localStorage.setItem("indmetro:pushEnabled", String(next)); } catch { /**/ }
+    }
+  };
   const [fontSize, setFontSize] = useFontSize();
 
   return (
@@ -179,6 +191,18 @@ export const SideMenu = ({ open, onOpenChange, onOpenTips }: SideMenuProps) => {
                 onCheckedChange={toggleReduceMotion}
                 aria-label="Reduce motion"
               />
+            </div>
+
+            {/* Feature 41: Push notification toggle */}
+            <div className="flex items-center justify-between rounded-lg px-3 py-2 min-h-[44px]">
+              <span className="flex items-center gap-3">
+                <Bell className="h-4 w-4 text-primary" />
+                <div>
+                  <p className="text-sm font-medium">Train alerts</p>
+                  <p className="text-xs text-muted-foreground">First &amp; last train reminders</p>
+                </div>
+              </span>
+              <Switch checked={notifEnabled} onCheckedChange={toggleNotif} aria-label="Train alerts" />
             </div>
 
             {canInstall && (

@@ -13,14 +13,13 @@
  *  - Tips dialog — per-city fares, headways, smart card info
  *  - Journey Mode overlay
  */
-import { useState, useCallback, lazy, Suspense, useEffect, useMemo, useRef } from "react";
+import { useState, useCallback, lazy, Suspense, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronLeft, Navigation, X, Route, ListTree, Users, Menu, Train,
   Search, MapPin, Landmark, Clock, IndianRupee, CreditCard, Baby,
-  ShieldCheck, Info, ArrowUpDown,
+  ShieldCheck, Info, ArrowUpDown, Share2,
 } from "lucide-react";
-import { haptics } from "@/lib/haptics";
 import {
   Drawer,
   DrawerContent,
@@ -30,10 +29,16 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SideMenu from "@/components/SideMenu";
+import { useGoSmartCard } from "@/contexts/GoSmartCardContext";
 import WelcomeOverlay from "@/components/WelcomeOverlay";
 import OfflineIndicator from "@/components/OfflineIndicator";
 import JourneyMode from "@/components/JourneyMode";
 import ThemeToggle from "@/components/ThemeToggle";
+import { QrShareSheet } from "@/components/QrShareSheet";
+import { StationDetailSheet } from "@/components/StationDetailSheet";
+import { MultiTripCalculator } from "@/components/MultiTripCalculator";
+import { haptics } from "@/lib/haptics";
+import { useRef, useCallback } from "react";
 import { cn, getISTDate } from "@/lib/utils";
 import type { GenericSchedule } from "@/lib/trainSimulation";
 import { getActiveTrains, getCurrentISTMinutes } from "@/lib/trainSimulation";
@@ -142,7 +147,7 @@ interface NearestStationInfo {
   walkingMinutes: number;
 }
 
-type PanelTab = "route" | "stations" | "cocommute" | "live" | null;
+type PanelTab = "route" | "stations" | "cocommute" | "live" | "multifares" | null;
 
 // ── CityApp ───────────────────────────────────────────────────────────────────
 
@@ -170,6 +175,7 @@ export function CityApp({
 }: CityAppProps) {
   const navigate = useNavigate();
   const { journey, startJourney, endJourney, requestNotificationPermission } = useJourneyTracker();
+  const { hasGoSmartCard, balance, getDiscountedFare } = useGoSmartCard();
 
   const [activeTab, setActiveTab] = useState<PanelTab>(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -177,13 +183,26 @@ export function CityApp({
   const [activeTrainCount, setActiveTrainCount] = useState(0);
 
   const [origin, setOrigin] = useState("");
-  const [swapRotated, setSwapRotated] = useState(false);
-  // Feature 9: skeleton loader while route is calculating
-  const [isRouting, setIsRouting] = useState(false);
-  // Feature 10: fare odometer — displayed fare and animated value
-  const [displayFare, setDisplayFare] = useState(0);
-  const fareRafRef = useRef<number | null>(null);
   const [dest, setDest] = useState("");
+  // Feature 4: QR share sheet
+  const [qrOpen, setQrOpen] = useState(false);
+  // Feature 22/23: station detail sheet
+  const [detailStationId, setDetailStationId] = useState<string | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+  // Feature 5: card pill dismissed
+  const [cardPillDismissed, setCardPillDismissed] = useState(false);
+  // Feature 18: recents in autocomplete
+  const recentStationsKey = `indmetro:${citySlug}:recentStations`;
+  const getRecentStations = () => {
+    try { return JSON.parse(localStorage.getItem(recentStationsKey) ?? "[]") as string[]; }
+    catch { return []; }
+  };
+  const saveRecentStation = (id: string) => {
+    try {
+      const prev = getRecentStations().filter((s) => s !== id);
+      localStorage.setItem(recentStationsKey, JSON.stringify([id, ...prev].slice(0, 5)));
+    } catch { /* ignore */ }
+  };
   const [route, setRoute] = useState<CityRoute | null>(null);
   const [routeError, setRouteError] = useState<string | null>(null);
   const [highlightIds, setHighlightIds] = useState<string[] | null>(null);
@@ -254,56 +273,12 @@ export function CityApp({
     else setHighlightIds(null);
   }, []);
 
-  // Feature 10: animate fare from prev value to new value
-  const animateFare = useCallback((targetFare: number) => {
-    if (fareRafRef.current) cancelAnimationFrame(fareRafRef.current);
-    const start = performance.now();
-    const duration = 400;
-    setDisplayFare((prev) => {
-      const from = prev;
-      const step = (now: number) => {
-        const elapsed = now - start;
-        const t = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
-        setDisplayFare(Math.round(from + (targetFare - from) * eased));
-        if (t < 1) fareRafRef.current = requestAnimationFrame(step);
-      };
-      fareRafRef.current = requestAnimationFrame(step);
-      return from;
-    });
-  }, []);
-
   const tryRoute = useCallback((o: string, d: string) => {
-    if (!o || !d || o === d) { setRoute(null); setHighlightIds(null); setIsRouting(false); return; }
-    setIsRouting(true);
-    // planRoute is synchronous — setTimeout gives React a frame to show the skeleton
-    setTimeout(() => {
-      const r = planRoute(o, d);
-      setIsRouting(false);
-      if (r) {
-        setRoute(r);
-        setRouteError(null);
-        buildHighlight(r);
-        haptics.routeFound();
-        animateFare(r.discountedFare ?? r.fare);
-      } else {
-        setRoute(null);
-        setRouteError("No route found.");
-        setHighlightIds(null);
-      }
-    }, 80);
-  }, [planRoute, buildHighlight, animateFare]);
-
-  // Feature 4: swap origin ↔ destination
-  const handleSwap = useCallback(() => {
-    setSwapRotated((r) => !r);
-    haptics.tap();
-    const newOrigin = dest;
-    const newDest = origin;
-    setOrigin(newOrigin);
-    setDest(newDest);
-    tryRoute(newOrigin, newDest);
-  }, [origin, dest, tryRoute]);
+    if (!o || !d || o === d) { setRoute(null); setHighlightIds(null); return; }
+    const r = planRoute(o, d);
+    if (r) { setRoute(r); setRouteError(null); buildHighlight(r); }
+    else { setRoute(null); setRouteError("No route found."); setHighlightIds(null); }
+  }, [planRoute, buildHighlight]);
 
   const handleOriginChange = useCallback((id: string) => {
     setOrigin(id);
@@ -315,6 +290,12 @@ export function CityApp({
     tryRoute(origin, id);
   }, [origin, tryRoute]);
 
+  // Feature 39: open station detail sheet
+  const handleStationDetail = useCallback((id: string) => {
+    setDetailStationId(id);
+    setDetailOpen(true);
+  }, []);
+
   const handleStationClick = useCallback((id: string) => {
     setSelectedStationId(id);
     if (!origin) { setOrigin(id); setActiveTab("route"); }
@@ -325,7 +306,6 @@ export function CityApp({
     if (!route) return;
     const line = route.steps.find((s) => s.line)?.line ?? Object.keys(lineStations)[0];
     await requestNotificationPermission();
-    haptics.journeyStart();
     await startJourney(route.origin.id, route.destination.id, line);
   }, [route, startJourney, requestNotificationPermission, lineStations]);
 
@@ -416,6 +396,18 @@ export function CityApp({
       )}
 
       <OfflineIndicator />
+      {/* Feature 5: Floating smart card balance pill */}
+      {hasGoSmartCard && !cardPillDismissed && activeTab === null && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[850] flex items-center gap-2 bg-background/90 backdrop-blur-sm border border-border rounded-full px-4 py-2 shadow-lg">
+          <span className="text-base">💳</span>
+          <span className="text-sm font-semibold">₹{balance.toFixed(0)}</span>
+          <span className="text-xs text-muted-foreground">GoSmart</span>
+          <button onClick={() => setCardPillDismissed(true)} className="ml-1 p-1 rounded-full hover:bg-muted" aria-label="Dismiss">
+            <X className="h-3 w-3 text-muted-foreground" />
+          </button>
+        </div>
+      )}
+
       <WelcomeOverlay
         cityName={`${cityName} Metro`}
         storageKey={`indmetro:welcome:${citySlug}`}
@@ -435,6 +427,8 @@ export function CityApp({
           selectedStationId={selectedStationId}
           highlightRouteIds={highlightIds}
           onStationClick={handleStationClick}
+          onStationDetail={handleStationDetail}
+          getCrowd={getCrowd}
           onActiveTrainCount={setActiveTrainCount}
           onNearestStationFound={handleNearestStationFound}
         />
@@ -565,6 +559,7 @@ export function CityApp({
           <DockBtn icon={<ListTree className="h-5 w-5" />} label="Stations" active={activeTab === "stations"} onClick={() => setActiveTab(activeTab === "stations" ? null : "stations")} />
           <DockBtn icon={<Users className="h-5 w-5" />} label="Co-Commute" active={activeTab === "cocommute"} onClick={() => setActiveTab(activeTab === "cocommute" ? null : "cocommute")} />
           <DockBtn icon={<Train className="h-5 w-5" />} label="Live" active={activeTab === "live"} onClick={() => setActiveTab(activeTab === "live" ? null : "live")} />
+          <DockBtn icon={<IndianRupee className="h-5 w-5" />} label="Multi-fare" active={activeTab === "multifares"} onClick={() => setActiveTab(activeTab === "multifares" ? null : "multifares")} />
         </div>
       </div>
 
@@ -577,6 +572,7 @@ export function CityApp({
               {activeTab === "stations" && `${cityName} Metro stations`}
               {activeTab === "cocommute" && "Co-Commute"}
               {activeTab === "live" && "Live Trains"}
+              {activeTab === "multifares" && "Multi-leg Fare Calculator"}
             </DrawerTitle>
           </DrawerHeader>
 
@@ -586,22 +582,6 @@ export function CityApp({
             {activeTab === "route" && (
               <div className="space-y-3">
                 <StationSelect label="From" value={origin} onChange={handleOriginChange} stations={stationOptions} />
-
-                {/* Feature 4: swap button */}
-                <div className="flex justify-center -my-1 relative z-10">
-                  <button
-                    onClick={handleSwap}
-                    disabled={!origin && !dest}
-                    aria-label="Swap origin and destination"
-                    className="h-7 w-7 rounded-full border border-border bg-background shadow-sm flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-30"
-                  >
-                    <ArrowUpDown
-                      className="h-3.5 w-3.5 text-muted-foreground transition-transform duration-300"
-                      style={{ transform: swapRotated ? "rotate(180deg)" : "rotate(0deg)" }}
-                    />
-                  </button>
-                </div>
-
                 <StationSelect label="To" value={dest} onChange={handleDestChange} stations={stationOptions} />
 
                 {routeError && <p className="text-xs text-center text-destructive">{routeError}</p>}
@@ -609,34 +589,7 @@ export function CityApp({
                   <p className="text-xs text-center text-muted-foreground">Same station selected.</p>
                 )}
 
-                {/* Feature 9: route skeleton loader */}
-                {isRouting && (
-                  <div className="bg-card border border-border rounded-2xl p-4 space-y-3 animate-pulse">
-                    <div className="flex items-center gap-2">
-                      <div className="h-4 w-24 rounded bg-muted" />
-                      <div className="h-3 w-3 rounded bg-muted" />
-                      <div className="h-4 w-24 rounded bg-muted" />
-                    </div>
-                    <div className="grid grid-cols-3 gap-2">
-                      {[0, 1, 2].map((i) => (
-                        <div key={i} className="bg-muted/50 rounded-xl py-3 flex flex-col items-center gap-1.5">
-                          <div className="h-4 w-8 rounded bg-muted" />
-                          <div className="h-2.5 w-12 rounded bg-muted" />
-                        </div>
-                      ))}
-                    </div>
-                    <div className="space-y-2 pt-1 border-t border-border">
-                      {[0, 1, 2].map((i) => (
-                        <div key={i} className="flex items-center gap-2">
-                          <div className="h-2 w-2 rounded-full bg-muted shrink-0" />
-                          <div className="h-3 rounded bg-muted" style={{ width: `${60 + i * 15}%` }} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {!isRouting && route && (
+                {route && (
                   <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
                     <div className="flex items-center gap-2 text-sm font-medium flex-wrap">
                       <span>{route.origin.name}</span>
@@ -654,7 +607,7 @@ export function CityApp({
                       {[
                         { label: "Stations", value: String(route.totalStations) },
                         { label: "Time", value: `~${route.totalTime} min` },
-                        { label: "Fare", value: `₹${displayFare}` },
+                        { label: "Fare", value: `₹${route.discountedFare ?? route.fare}` },
                       ].map(({ label, value }) => (
                         <div key={label} className="bg-muted/50 rounded-xl py-2">
                           <p className="text-base font-bold">{value}</p>
@@ -714,6 +667,14 @@ export function CityApp({
                         <Train className="w-4 h-4" /> Start Journey
                       </button>
                     )}
+                    {/* Feature 4: Share trip */}
+                    <button
+                      onClick={() => setQrOpen(true)}
+                      className="w-full flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground py-2 border border-border rounded-xl transition-colors"
+                    >
+                      <Share2 className="h-4 w-4" />
+                      Share trip
+                    </button>
                   </div>
                 )}
               </div>
@@ -763,22 +724,6 @@ export function CityApp({
                     </button>
                   );
                 })}
-
-                {/* Feature 9: next trains skeleton — shown briefly while useMemo recalculates */}
-                {selectedStationId && selectedStationNextTrains.length === 0 && (
-                  <div className="mt-3 bg-muted/40 rounded-xl p-3 animate-pulse">
-                    <div className="h-3 w-32 rounded bg-muted mb-3" />
-                    {[0, 1, 2, 3].map((i) => (
-                      <div key={i} className="flex items-center justify-between py-1.5 border-b border-border/50 last:border-0">
-                        <div className="flex items-center gap-2">
-                          <div className="h-2 w-2 rounded-full bg-muted shrink-0" />
-                          <div className="h-3 w-28 rounded bg-muted" />
-                        </div>
-                        <div className="h-3 w-10 rounded bg-muted" />
-                      </div>
-                    ))}
-                  </div>
-                )}
 
                 {/* Next trains for selected station */}
                 {selectedStationId && selectedStationNextTrains.length > 0 && (
@@ -900,6 +845,15 @@ export function CityApp({
                   </p>
                 )}
               </div>
+            )}
+
+            {/* ── Multi-leg fare calculator ───────────────────────── */}
+            {activeTab === "multifares" && (
+              <MultiTripCalculator
+                stations={stationOptions}
+                calculateFare={(from, to) => planRoute(from, to)?.fare ?? 0}
+                hasGoSmartCard={hasGoSmartCard}
+              />
             )}
 
             {/* ── Live trains board ──────────────────────────────────────── */}
@@ -1237,5 +1191,36 @@ const StationSelect = ({
     </select>
   </div>
 );
+
+      {/* Feature 4: QR Share Sheet */}
+      {route && (
+        <QrShareSheet
+          open={qrOpen}
+          onClose={() => setQrOpen(false)}
+          citySlug={citySlug}
+          fromId={route.origin.id}
+          toId={route.destination.id}
+          fromName={route.origin.name}
+          toName={route.destination.name}
+          fare={route.discountedFare ?? route.fare}
+          durationMinutes={route.travelTimeMinutes}
+        />
+      )}
+
+      {/* Feature 22/23: Station Detail Sheet */}
+      <StationDetailSheet
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+        stationId={detailStationId}
+        stationName={detailStationId ? (stations[detailStationId]?.name ?? "") : ""}
+        lines={detailStationId ? (stations[detailStationId]?.lines ?? []) : []}
+        lineColors={lineColors}
+        lineNames={lineNames}
+        nextTrains={detailStationId && getNextTrains ? getNextTrains(detailStationId, "", "forward", 6) as any ?? [] : []}
+        crowdInfo={detailStationId && getCrowd ? getCrowd(detailStationId) : null}
+        onPlanFrom={(id) => { setOrigin(id); setActiveTab("route"); setDrawerOpen(true); }}
+        onPlanTo={(id) => { setDest(id); setActiveTab("route"); setDrawerOpen(true); }}
+      />
+
 
 export default CityApp;
