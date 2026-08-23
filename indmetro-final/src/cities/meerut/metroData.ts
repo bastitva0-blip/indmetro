@@ -9,10 +9,19 @@
  *       IndMetro covers Meerut Metro (MRTS local) section only.
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string; name: string; coordinates: [number, number];
   lines: ("metro")[]; isUnderground?: boolean; isWIP?: boolean;
   isRRTSAlso?: boolean; // station served by both RRTS express + MRTS local
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = { metro: "#00897B" } as const;

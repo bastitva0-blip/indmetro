@@ -13,6 +13,13 @@ import {
 import { useGeolocation } from "@/hooks/use-geolocation";
 import { findNearestStation } from "@/lib/nearestStation";
 
+export interface StationGate {
+  id: string;           // "A", "B", "C", "D"
+  description: string;  // "Towards Connaught Place"
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
+
 export interface GenericStation {
   id: string;
   name: string;
@@ -21,6 +28,9 @@ export interface GenericStation {
   isInterchange?: boolean;
   isWIP?: boolean;
   isUnderground?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 interface GenericCityMapProps {

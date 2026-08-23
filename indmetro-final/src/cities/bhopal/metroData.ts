@@ -12,6 +12,12 @@
  * Sources: Wikipedia, themetrorailguy.com, yometro.com (Aug 2026)
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string;
   name: string;
@@ -20,6 +26,9 @@ export interface Station {
   isUnderground?: boolean;
   isInterchange?: boolean;
   isWIP?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = {
@@ -99,6 +108,15 @@ export const stations: Record<string, Station> = {
     lines: ["orange", "blue"],
     isInterchange: true,
     isWIP: true,
+    gates: [
+      { id: "1", description: "Pul Bogda Bridge, Bhopal Junction Railway Station side", hasLift: true, hasRamp: true },
+      { id: "2", description: "Nadra Bus Stand, Hamidia Road side", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: false },
+    platformInfo: {
+      orange: { number: 1, direction: "towards Karond" },
+      blue:   { number: 3, direction: "towards Bhadbhada" },
+    },
   },
   nadra_bus_stand: {
     id: "nadra_bus_stand",

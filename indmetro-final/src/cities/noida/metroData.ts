@@ -7,16 +7,34 @@
  * Note: DMRC smart cards NOT valid on NMRC. Separate ticketing.
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string; name: string; coordinates: [number, number];
   lines: ("aqua")[]; isInterchange?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = { aqua: "#00BCD4" } as const;
 export const LINE_NAMES  = { aqua: "Aqua Line" } as const;
 
 export const stations: Record<string, Station> = {
-  sector_51:        { id: "sector_51",        name: "Noida Sector 51",      coordinates: [28.5867, 77.3728], lines: ["aqua"], isInterchange: true },
+  sector_51:        { id: "sector_51",        name: "Noida Sector 51",      coordinates: [28.5867, 77.3728], lines: ["aqua"], isInterchange: true,
+    gates: [
+      { id: "1", description: "Sector 51 Main Road, towards Sector 50 market", hasLift: true, hasRamp: true },
+      { id: "2", description: "Sector 52 Road side, towards Sector 61", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: true },
+    platformInfo: {
+      aqua: { number: 1, direction: "towards Botanical Garden" },
+    },
+  },
   sector_50:        { id: "sector_50",        name: "Noida Sector 50",      coordinates: [28.5754, 77.3742], lines: ["aqua"] },
   sector_76:        { id: "sector_76",        name: "Noida Sector 76",      coordinates: [28.5632, 77.3812], lines: ["aqua"] },
   sector_101:       { id: "sector_101",       name: "Noida Sector 101",     coordinates: [28.5564, 77.3848], lines: ["aqua"] },

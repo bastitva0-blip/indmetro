@@ -18,6 +18,12 @@
  * Sources: Wikipedia Blue/Green Line articles (Aug 2026), chennaimetrorail.org
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string;
   name: string;
@@ -26,6 +32,9 @@ export interface Station {
   isUnderground?: boolean;
   isInterchange?: boolean;
   isWIP?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = {
@@ -57,6 +66,17 @@ export const stations: Record<string, Station> = {
     id: "alandur", name: "Alandur",
     coordinates: [13.0041, 80.1902], lines: ["blue", "green"],
     isInterchange: true,
+    gates: [
+      { id: "A", description: "Alandur Main Road, GST Road side", hasLift: true, hasRamp: true },
+      { id: "B", description: "Alandur Bus Stand, Sankarapuram side", hasLift: true },
+      { id: "C", description: "DLF Cyber City, RTO Office side", hasLift: true },
+      { id: "D", description: "REMO College, West side", hasLift: false },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: false },
+    platformInfo: {
+      blue:  { number: 1, direction: "towards Chennai Airport" },
+      green: { number: 3, direction: "towards St. Thomas Mount" },
+    },
   },
   guindy: {
     id: "guindy", name: "Guindy",
@@ -199,6 +219,16 @@ export const stations: Record<string, Station> = {
     id: "chennai_central", name: "Chennai Central",
     coordinates: [13.0827, 80.2762], lines: ["green"],
     isUnderground: true, isInterchange: true,
+    gates: [
+      { id: "B1", description: "Chennai Central Railway Station main entrance", hasLift: true, hasRamp: true },
+      { id: "B2", description: "Park Railway Station side", hasLift: true },
+      { id: "B3", description: "Allikulam Court Complex, Moore Market side", hasLift: true },
+      { id: "B5", description: "Ripon Building, Jawaharlal Nehru Indoor Stadium", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: false, fourWheeler: true },
+    platformInfo: {
+      green: { number: 1, direction: "towards St. Thomas Mount / Alandur" },
+    },
   },
   nehru_park: {
     id: "nehru_park", name: "Nehru Park",

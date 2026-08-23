@@ -242,7 +242,7 @@ export function CityApp({
     const placeResults = localPlaces
       .filter((p) => p.name.toLowerCase().includes(q))
       .slice(0, 3)
-      .map((p) => ({ type: "landmark" as const, id: p.nearestStationId, label: p.name, sublabel: stations[p.nearestStationId]?.name }));
+      .map((p) => ({ type: "landmark" as const, id: p.nearestStationId, label: p.name, sublabel: `Nearest station: ${stations[p.nearestStationId]?.name ?? ""}`, category: p.category }));
     return [...stResults, ...placeResults].slice(0, 7);
   }, [searchQuery, stationOptions, localPlaces, stations]);
 
@@ -495,24 +495,35 @@ export function CityApp({
 
           {searchOpen && searchResults.length > 0 && (
             <div className="absolute top-full mt-1 left-0 right-0 bg-card border border-border rounded-xl shadow-lg overflow-hidden">
-              {searchResults.map((r, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleSearchSelect(r.id)}
-                  className="w-full flex items-center gap-2.5 px-3 py-2.5 hover:bg-muted transition-colors text-left border-b border-border last:border-0"
-                >
-                  {r.type === "station"
-                    ? <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
-                    : <Landmark className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                  }
-                  <div>
-                    <p className="text-sm">{r.label}</p>
-                    {"sublabel" in r && r.sublabel && (
-                      <p className="text-xs text-muted-foreground">{r.sublabel}</p>
+              {searchResults.map((r, i) => {
+                const catEmoji: Record<string, string> = {
+                  heritage: "🏛️", shopping: "🛍️", park: "🌳", education: "🎓",
+                  hospital: "🏥", transport: "🚉", civic: "🏛️", religious: "🕌",
+                  entertainment: "🎭", sports: "🏟️",
+                };
+                const emoji = r.type === "station" ? null : catEmoji[("category" in r ? r.category : "") ?? ""] ?? "📍";
+                return (
+                  <button
+                    key={i}
+                    onClick={() => handleSearchSelect(r.id)}
+                    className="w-full flex items-center gap-2.5 px-3 py-2.5 hover:bg-muted transition-colors text-left border-b border-border last:border-0"
+                  >
+                    {r.type === "station"
+                      ? <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
+                      : <span className="text-base shrink-0">{emoji}</span>
+                    }
+                    <div className="min-w-0">
+                      <p className="text-sm truncate">{r.label}</p>
+                      {"sublabel" in r && r.sublabel && (
+                        <p className="text-xs text-muted-foreground truncate">{r.sublabel}</p>
+                      )}
+                    </div>
+                    {r.type === "landmark" && (
+                      <span className="ml-auto text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded-full shrink-0">landmark</span>
                     )}
-                  </div>
-                </button>
-              ))}
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>
@@ -632,7 +643,15 @@ export function CityApp({
                                   className="h-2 w-2 rounded-full mt-0.5 shrink-0"
                                   style={{ background: step.line ? lineColors[step.line] : primaryColor }}
                                 />
-                                <span>Board {step.line ? lineNames[step.line] : ""} at {step.stationName} → {step.direction}</span>
+                                <span>
+                                  Board <strong>{step.line ? lineNames[step.line] : ""}</strong> at {step.stationName}
+                                  {step.line && stations[step.stationId ?? ""]?.platformInfo?.[step.line] && (
+                                    <span className="ml-1.5 inline-flex items-center gap-1 text-[10px] font-semibold bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
+                                      Plt {stations[step.stationId ?? ""]?.platformInfo?.[step.line]?.number}
+                                    </span>
+                                  )}
+                                  {" → "}{step.direction}
+                                </span>
                               </>
                             )}
                             {step.type === "travel" && (
@@ -911,8 +930,12 @@ export function CityApp({
         lines={detailStationId ? (stations[detailStationId]?.lines ?? []) : []}
         lineColors={lineColors}
         lineNames={lineNames}
+        isInterchange={detailStationId ? stations[detailStationId]?.isInterchange : false}
+        isUnderground={detailStationId ? stations[detailStationId]?.isUnderground : false}
         nextTrains={detailStationId && getNextTrains ? getNextTrains(detailStationId, "", "forward", 6) as any ?? [] : []}
         crowdInfo={detailStationId && getCrowd ? getCrowd(detailStationId) : null}
+        gates={detailStationId ? stations[detailStationId]?.gates : undefined}
+        parkingAvailable={detailStationId ? stations[detailStationId]?.parkingAvailable : undefined}
         onPlanFrom={(id) => { setOrigin(id); setActiveTab("route"); }}
         onPlanTo={(id) => { setDest(id); setActiveTab("route"); }}
       />

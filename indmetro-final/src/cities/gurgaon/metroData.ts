@@ -8,6 +8,12 @@
  * All stations operational.
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string;
   name: string;
@@ -15,6 +21,9 @@ export interface Station {
   lines: ("rapid")[];
   isInterchange?: boolean;
   isUnderground?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = { rapid: "#00BCD4" } as const;
@@ -26,7 +35,16 @@ export const stations: Record<string, Station> = {
   sector_53_54:    { id: "sector_53_54",    name: "Sector 53-54",       coordinates: [28.4464, 77.1004], lines: ["rapid"] },
   sector_42_43:    { id: "sector_42_43",    name: "Sector 42-43",       coordinates: [28.4574, 77.0969], lines: ["rapid"] },
   dlf_phase_1:     { id: "dlf_phase_1",     name: "DLF Phase 1",        coordinates: [28.4714, 77.0939], lines: ["rapid"] },
-  sikanderpur:     { id: "sikanderpur",     name: "Sikanderpur",        coordinates: [28.4814, 77.0931], lines: ["rapid"], isInterchange: true },
+  sikanderpur:     { id: "sikanderpur",     name: "Sikanderpur",        coordinates: [28.4814, 77.0931], lines: ["rapid"], isInterchange: true,
+    gates: [
+      { id: "1", description: "MG Road, Sikanderpur metro crossing, towards DLF phase 4", hasLift: true, hasRamp: true },
+      { id: "2", description: "Galleria DLF, Sikanderpur village side", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: false },
+    platformInfo: {
+      rapid: { number: 1, direction: "towards Sector 55-56" },
+    },
+  },
   dlf_phase_2:     { id: "dlf_phase_2",     name: "DLF Phase 2",        coordinates: [28.4842, 77.0932], lines: ["rapid"] },
   belvedere_towers:{ id: "belvedere_towers",name: "Belvedere Towers",   coordinates: [28.4871, 77.0933], lines: ["rapid"] },
   cyber_city:      { id: "cyber_city",      name: "Cyber City",         coordinates: [28.4901, 77.0934], lines: ["rapid"] },

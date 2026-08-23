@@ -19,6 +19,12 @@
  * Sources: Wikipedia, myindoremetro.com, MPMRCL, themetrorailguy.com (Aug 2026)
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string;
   name: string;
@@ -26,6 +32,9 @@ export interface Station {
   lines: ("yellow")[];
   isUnderground?: boolean;
   isWIP?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = { yellow: "#EAB308" } as const;

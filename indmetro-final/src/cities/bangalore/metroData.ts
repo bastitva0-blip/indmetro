@@ -22,6 +22,12 @@
  * Sources: Wikipedia, bengalurumetrolines.in, BMRCL (Aug 2026)
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string;
   name: string;
@@ -30,6 +36,9 @@ export interface Station {
   isUnderground?: boolean;
   isInterchange?: boolean;
   isWIP?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = {
@@ -75,7 +84,19 @@ export const stations: Record<string, Station> = {
   cubbon_park:         { id: "cubbon_park",            name: "Cubbon Park",              coordinates: [12.9788, 77.5965], lines: ["purple"], isUnderground: true },
   vidhana_soudha:      { id: "vidhana_soudha",         name: "Vidhana Soudha",           coordinates: [12.9788, 77.5868], lines: ["purple"], isUnderground: true },
   sir_mv:              { id: "sir_mv",                 name: "Sir M. Visveswaraya",      coordinates: [12.9778, 77.5778], lines: ["purple"], isUnderground: true },
-  majestic:            { id: "majestic",               name: "Nadaprabhu Kempegowda",    coordinates: [12.9770, 77.5712], lines: ["purple", "green"], isInterchange: true, isUnderground: true },
+  majestic:            { id: "majestic",               name: "Nadaprabhu Kempegowda",    coordinates: [12.9770, 77.5712], lines: ["purple", "green"], isInterchange: true, isUnderground: true,
+    gates: [
+      { id: "A/A1", description: "KSR Bengaluru Railway Station & KSRTC Terminal 2/2A", hasLift: true, hasRamp: true },
+      { id: "B",    description: "Chikka Lalbagh, Shantala Silk Road side", hasLift: true, hasRamp: true },
+      { id: "C",    description: "Upparpete Police Station, Tank Bund Road, Gandhi Nagar", hasLift: true, hasRamp: true },
+      { id: "D",    description: "KSRTC Terminal 1 & BMTC bus station walkway", hasLift: false },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: false },
+    platformInfo: {
+      purple: { number: 1, direction: "towards Challaghatta / Kengeri" },
+      green:  { number: 3, direction: "towards Silk Institute / Yelachenahalli" },
+    },
+  },
   city_railway_station:{ id: "city_railway_station",  name: "Krantivira Sangolli Rayanna", coordinates: [12.9769, 77.5635], lines: ["purple"] },
 
   // Phase 1 West + Phase 2B West — elevated
@@ -124,7 +145,17 @@ export const stations: Record<string, Station> = {
   lalbagh:             { id: "lalbagh",               name: "Lalbagh",                  coordinates: [12.9428, 77.5828], lines: ["green"] },
   south_end_circle:    { id: "south_end_circle",      name: "South End Circle",         coordinates: [12.9358, 77.5838], lines: ["green"] },
   jayanagar:           { id: "jayanagar",             name: "Jayanagar",                coordinates: [12.9278, 77.5848], lines: ["green"] },
-  rv_road:             { id: "rv_road",               name: "RV Road",                  coordinates: [12.9198, 77.5878], lines: ["green", "yellow"], isInterchange: true },
+  rv_road:             { id: "rv_road",               name: "RV Road",                  coordinates: [12.9198, 77.5878], lines: ["green", "yellow"], isInterchange: true,
+    gates: [
+      { id: "A", description: "RV Road, Jayanagar 1st Block side", hasLift: true },
+      { id: "B", description: "South End Road, Basavanagudi side", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: false },
+    platformInfo: {
+      green:  { number: 1, direction: "towards Yelachenahalli" },
+      yellow: { number: 3, direction: "towards Bommasandra" },
+    },
+  },
 
   // Phase 2S (opened 2023) — elevated
   yelachenahalli:      { id: "yelachenahalli",        name: "Yelachenahalli",           coordinates: [12.9128, 77.5748], lines: ["green"] },

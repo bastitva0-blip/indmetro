@@ -16,6 +16,12 @@
  * Fare: Distance-based (₹5–₹40)
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string;
   name: string;
@@ -25,6 +31,9 @@ export interface Station {
   isInterchange?: boolean;
   hasRailTransfer?: boolean;
   isWIP?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = { blue: "#2196F3", red: "#F44336" } as const;
@@ -79,6 +88,16 @@ export const stations: Record<string, Station> = {
     coordinates: [23.0280, 72.5850], lines: ["blue", "red"],
     chainageKm: { blue: 9.4, red: 5.4 },
     isInterchange: true, hasRailTransfer: true, // ↔ Ahmedabad Junction
+    gates: [
+      { id: "1", description: "Ahmedabad Junction Railway Station main entrance", hasLift: true, hasRamp: true },
+      { id: "2", description: "Kalupur Road, Old City side", hasLift: true },
+      { id: "3", description: "Kalupur Bus Station (ST Bus Stand) side", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: false },
+    platformInfo: {
+      blue: { number: 1, direction: "towards Thaltej Gam" },
+      red:  { number: 3, direction: "towards Motera Stadium" },
+    },
   },
   shahpur: {
     id: "shahpur", name: "Shahpur",

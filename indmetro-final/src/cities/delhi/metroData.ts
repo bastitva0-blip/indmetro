@@ -21,6 +21,13 @@ export type DelhiLine =
   | "green" | "violet" | "orange"
   | "pink" | "magenta" | "grey";
 
+export interface StationGate {
+  id: string;          // "A" | "B" | "C" | "D"
+  description: string; // "Towards Connaught Place"
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
+
 export interface Station {
   id: string;
   name: string;
@@ -29,6 +36,9 @@ export interface Station {
   isUnderground?: boolean;
   isInterchange?: boolean;
   isWIP?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS: Record<DelhiLine, string> = {
@@ -80,10 +90,37 @@ export const stations: Record<string, Station> = {
   jhilmil:                s("jhilmil",                "Jhilmil",                      28.6698, 77.3058, ["red"]),
   mansarovar_park:        s("mansarovar_park",        "Mansarovar Park",              28.6688, 77.2978, ["red"]),
   shahdara:               s("shahdara",               "Shahdara",                     28.6688, 77.3048, ["red"]),
-  welcome:                s("welcome",                "Welcome",                      28.6688, 77.2948, ["red", "pink"], { isInterchange: true }),
+  welcome:                s("welcome",                "Welcome",                      28.6688, 77.2948, ["red", "pink"], { isInterchange: true,
+    gates: [
+      { id: "1", description: "GT Road towards Delhi (south)", hasLift: false },
+      { id: "4", description: "GT Road towards Ghaziabad (north)", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: false, fourWheeler: false },
+    platformInfo: {
+      red:  { number: 1, direction: "towards Rithala" },
+      pink: { number: 3, direction: "towards Majlis Park" },
+    },
+  }),
   seelampur:              s("seelampur",              "Seelampur",                    28.6658, 77.2848, ["red"]),
   shastri_park:           s("shastri_park",           "Shastri Park",                 28.6588, 77.2658, ["red"]),
-  kashmere_gate:          s("kashmere_gate",          "Kashmere Gate",                28.6682, 77.2298, ["red", "yellow", "violet"], { isInterchange: true, isUnderground: true }),
+  kashmere_gate:          s("kashmere_gate",          "Kashmere Gate",                28.6682, 77.2298, ["red", "yellow", "violet"], { isInterchange: true, isUnderground: true,
+    gates: [
+      { id: "1", description: "Mori Gate side", hasLift: false },
+      { id: "2", description: "Lala Hardev Sahai Marg", hasLift: false },
+      { id: "3", description: "Lala Hardev Sahai Marg", hasLift: false },
+      { id: "4", description: "Lala Hardev Sahai Marg", hasLift: false },
+      { id: "5", description: "Lala Hardev Sahai Marg (Lothian Road, GT Road)", hasLift: true },
+      { id: "6", description: "Lothian Road, GT Road — Lift accessible", hasLift: true },
+      { id: "7", description: "ISBT Kashmere Gate (Maharana Pratap Bus Terminal)", hasLift: false },
+      { id: "8", description: "ISBT Kashmere Gate — covered direct access", hasLift: false },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: true },
+    platformInfo: {
+      red: { number: 3, direction: "towards Rithala" },
+      yellow: { number: 1, direction: "towards Samaypur Badli" },
+      violet: { number: 5, direction: "towards Raja Nahar Singh / Ballabhgarh" },
+    },
+  }),
   tis_hazari:             s("tis_hazari",             "Tis Hazari",                   28.6668, 77.2088, ["red"]),
   pul_bangash:            s("pul_bangash",            "Pul Bangash",                  28.6678, 77.1988, ["red"]),
   pratap_nagar:           s("pratap_nagar",           "Pratap Nagar",                 28.6698, 77.1888, ["red"]),
@@ -91,7 +128,17 @@ export const stations: Record<string, Station> = {
   inderlok:               s("inderlok",               "Inderlok",                     28.6748, 77.1878, ["red", "green"], { isInterchange: true }),
   kanhaiya_nagar:         s("kanhaiya_nagar",         "Kanhaiya Nagar",               28.6828, 77.1748, ["red"]),
   keshav_puram:           s("keshav_puram",           "Keshav Puram",                 28.6908, 77.1638, ["red"]),
-  netaji_subhash_place:   s("netaji_subhash_place",   "Netaji Subhash Place",         28.6988, 77.1528, ["red", "pink"], { isInterchange: true }),
+  netaji_subhash_place:   s("netaji_subhash_place",   "Netaji Subhash Place",         28.6988, 77.1528, ["red", "pink"], { isInterchange: true,
+    gates: [
+      { id: "1", description: "Near Samrat Hotel, Pitampura main road", hasLift: true },
+      { id: "5", description: "Towards Sulabh Toilet Complex, NSP Market", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: true },
+    platformInfo: {
+      red:  { number: 1, direction: "towards Rithala" },
+      pink: { number: 3, direction: "towards Majlis Park" },
+    },
+  }),
   kohat_enclave:          s("kohat_enclave",          "Kohat Enclave",                28.7038, 77.1428, ["red"]),
   pitampura:              s("pitampura",              "Pitampura",                    28.7088, 77.1338, ["red"]),
   rohini_east:            s("rohini_east",            "Rohini East",                  28.7158, 77.1238, ["red"]),
@@ -114,17 +161,79 @@ export const stations: Record<string, Station> = {
   // kashmere_gate shared with Red + Violet — defined above
   chandni_chowk:          s("chandni_chowk",         "Chandni Chowk",                28.6568, 77.2288, ["yellow"], { isUnderground: true }),
   chawri_bazaar:          s("chawri_bazaar",          "Chawri Bazaar",                28.6468, 77.2288, ["yellow"], { isUnderground: true }),
-  new_delhi:              s("new_delhi",              "New Delhi",                    28.6368, 77.2208, ["yellow", "orange"], { isInterchange: true, isUnderground: true }),
-  rajiv_chowk:            s("rajiv_chowk",            "Rajiv Chowk",                  28.6328, 77.2197, ["yellow", "blue"], { isInterchange: true, isUnderground: true }),
+  new_delhi:              s("new_delhi",              "New Delhi",                    28.6368, 77.2208, ["yellow", "orange"], { isInterchange: true, isUnderground: true,
+    gates: [
+      { id: "1", description: "Ajmeri Gate side, Vabhuti Marg", hasLift: true },
+      { id: "6", description: "New Delhi Railway Station (main exit)", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: false, fourWheeler: false },
+    platformInfo: {
+      yellow: { number: 1, direction: "towards HUDA City Centre" },
+      orange: { number: 1, direction: "towards Dwarka Sector 21 / Airport" },
+    },
+  }),
+  rajiv_chowk:            s("rajiv_chowk",            "Rajiv Chowk",                  28.6328, 77.2197, ["yellow", "blue"], { isInterchange: true, isUnderground: true,
+    gates: [
+      { id: "1", description: "Panchkuian Road, B Block, Minto Road", hasLift: true },
+      { id: "2", description: "PVR Plaza, Connaught Place", hasLift: true },
+      { id: "3", description: "A Block, Connaught Place", hasLift: true },
+      { id: "4", description: "E Block, Barakhamba Road & KG Road", hasLift: true },
+      { id: "5", description: "Janpath Road, F Block", hasLift: true },
+      { id: "6", description: "Janpath Road, Palika Bazar", hasLift: true },
+      { id: "7", description: "H Block, Connaught Place", hasLift: true },
+      { id: "8", description: "Panchkuian Road, A Block", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: true },
+    platformInfo: {
+      yellow: { number: 1, direction: "towards HUDA City Centre / Gurugram" },
+      blue: { number: 3, direction: "towards Noida / Vaishali" },
+    },
+  }),
   patel_chowk:            s("patel_chowk",            "Patel Chowk",                  28.6238, 77.2128, ["yellow"], { isUnderground: true }),
-  central_secretariat:    s("central_secretariat",    "Central Secretariat",          28.6148, 77.2118, ["yellow", "violet"], { isInterchange: true, isUnderground: true }),
+  central_secretariat:    s("central_secretariat",    "Central Secretariat",          28.6148, 77.2118, ["yellow", "violet"], { isInterchange: true, isUnderground: true,
+    gates: [
+      { id: "1", description: "Rail Bhawan side, Raisina Road", hasLift: true },
+      { id: "2", description: "Vijay Chowk, Rajpath", hasLift: true },
+      { id: "3", description: "India Gate side, Janpath", hasLift: true },
+      { id: "4", description: "Sunehari Bagh Masjid side", hasLift: true },
+      { id: "5", description: "Tughlak Road, South Avenue", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: false, fourWheeler: false },
+    platformInfo: {
+      yellow: { number: 1, direction: "towards HUDA City Centre / Gurugram" },
+      violet: { number: 3, direction: "towards Raja Nahar Singh / Ballabhgarh" },
+    },
+  }),
   udyog_bhawan:           s("udyog_bhawan",           "Udyog Bhawan",                 28.6088, 77.2138, ["yellow"], { isUnderground: true }),
   lok_kalyan_marg:        s("lok_kalyan_marg",        "Lok Kalyan Marg",              28.5938, 77.2028, ["yellow"]),
   jor_bagh:               s("jor_bagh",               "Jor Bagh",                     28.5858, 77.2018, ["yellow"]),
   ina:                    s("ina",                    "INA",                          28.5698, 77.2098, ["yellow"]),
-  aiims_yellow:           s("aiims_yellow",           "AIIMS",                        28.5668, 77.2118, ["yellow"]),
+  aiims_yellow:           s("aiims_yellow",           "AIIMS",                        28.5668, 77.2118, ["yellow"],
+    {
+      gates: [
+        { id: "1", description: "Towards AIIMS OPD / Main Hospital entrance", hasLift: true, hasRamp: true },
+        { id: "2", description: "Towards Ansari Nagar East, AIIMS Trauma Centre", hasLift: true },
+        { id: "3", description: "Towards Safdarjung Hospital", hasLift: true },
+        { id: "4", description: "Towards Laxmibai Nagar / Ring Road", hasLift: true },
+      ],
+      parkingAvailable: { twoWheeler: false, fourWheeler: false },
+      platformInfo: {
+        yellow: { number: 1, direction: "towards HUDA City Centre / Gurugram" },
+      },
+    }),
   green_park:             s("green_park",             "Green Park",                   28.5568, 77.2068, ["yellow"]),
-  hauz_khas:              s("hauz_khas",              "Hauz Khas",                    28.5438, 77.2038, ["yellow", "magenta"], { isInterchange: true }),
+  hauz_khas:              s("hauz_khas",              "Hauz Khas",                    28.5438, 77.2038, ["yellow", "magenta"], { isInterchange: true,
+    gates: [
+      { id: "1", description: "Near IIT Delhi, Ring Road", hasLift: true },
+      { id: "2", description: "Kalu Sarai, Aurobindo Marg side", hasLift: true },
+      { id: "3", description: "Hauz Khas Village, Sri Fort side", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: true },
+    platformInfo: {
+      yellow: { number: 1, direction: "towards HUDA City Centre / Gurugram" },
+      magenta: { number: 3, direction: "towards Botanical Garden" },
+    },
+  }),
   malviya_nagar:          s("malviya_nagar",          "Malviya Nagar",                28.5288, 77.1988, ["yellow"]),
   saket:                  s("saket",                  "Saket",                        28.5228, 77.2108, ["yellow"]),
   qutab_minar:            s("qutab_minar",            "Qutab Minar",                  28.5258, 77.1878, ["yellow"]),
@@ -158,7 +267,17 @@ export const stations: Record<string, Station> = {
   tilak_nagar:            s("tilak_nagar",            "Tilak Nagar",                  28.6418, 77.1058, ["blue"]),
   subhash_nagar:          s("subhash_nagar",          "Subhash Nagar",                28.6468, 77.1168, ["blue"]),
   tagore_garden:          s("tagore_garden",          "Tagore Garden",                28.6498, 77.1278, ["blue"]),
-  rajouri_garden:         s("rajouri_garden",         "Rajouri Garden",               28.6498, 77.1308, ["blue", "pink"], { isInterchange: true }),
+  rajouri_garden:         s("rajouri_garden",         "Rajouri Garden",               28.6498, 77.1308, ["blue", "pink"], { isInterchange: true,
+    gates: [
+      { id: "3", description: "Near Rajouri Garden Main Market", hasLift: true },
+      { id: "7", description: "Near ICICI Bank, A Block", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: true },
+    platformInfo: {
+      blue: { number: 1, direction: "towards Dwarka Sector 21" },
+      pink: { number: 3, direction: "towards Majlis Park" },
+    },
+  }),
   ramesh_nagar:           s("ramesh_nagar",           "Ramesh Nagar",                 28.6508, 77.1448, ["blue"]),
   moti_nagar:             s("moti_nagar",             "Moti Nagar",                   28.6538, 77.1558, ["blue"]),
   kirti_nagar:            s("kirti_nagar",            "Kirti Nagar",                  28.6548, 77.1498, ["blue", "green"], { isInterchange: true }),
@@ -170,7 +289,21 @@ export const stations: Record<string, Station> = {
   ramakrishna_ashram_marg:s("ramakrishna_ashram_marg","Ramakrishna Ashram Marg",      28.6388, 77.2138, ["blue"], { isUnderground: true }),
   // rajiv_chowk shared Yellow ↔ Blue — defined above
   barakhamba_road:        s("barakhamba_road",        "Barakhamba Road",              28.6308, 77.2258, ["blue"], { isUnderground: true }),
-  mandi_house:            s("mandi_house",            "Mandi House",                  28.6272, 77.2392, ["blue", "violet"], { isInterchange: true, isUnderground: true }),
+  mandi_house:            s("mandi_house",            "Mandi House",                  28.6272, 77.2392, ["blue", "violet"], { isInterchange: true, isUnderground: true,
+    gates: [
+      { id: "1", description: "Near Lajpat Rai Market / Delhi Public Library", hasLift: true },
+      { id: "2", description: "Near Kasturba Hospital, Lal Qila side", hasLift: true },
+      { id: "3", description: "Near Lal Qila, Chandni Chowk side", hasLift: true },
+      { id: "4", description: "Near Meena Bazar", hasLift: true },
+      { id: "5", description: "Feroz Shah Kotla / BSES side", hasLift: true },
+      { id: "6", description: "Vikas Bhawan, Inst. of Engineering", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: false, fourWheeler: false },
+    platformInfo: {
+      blue: { number: 1, direction: "towards Dwarka Sector 21" },
+      violet: { number: 3, direction: "towards Raja Nahar Singh / Ballabhgarh" },
+    },
+  }),
   supreme_court:          s("supreme_court",          "Supreme Court",                28.6318, 77.2498, ["blue"], { isUnderground: true }),
   indraprastha:           s("indraprastha",           "Indraprastha",                 28.6352, 77.2638, ["blue"], { isUnderground: true }),
   yamuna_bank:            s("yamuna_bank",            "Yamuna Bank",                  28.6418, 77.2908, ["blue", "blue_b"], { isInterchange: true }),
@@ -181,7 +314,19 @@ export const stations: Record<string, Station> = {
   noida_sec_15:           s("noida_sec_15",           "Noida Sector 15",              28.5828, 77.3258, ["blue"]),
   noida_sec_16:           s("noida_sec_16",           "Noida Sector 16",              28.5748, 77.3358, ["blue"]),
   noida_sec_18:           s("noida_sec_18",           "Noida Sector 18",              28.5648, 77.3428, ["blue"]),
-  botanical_garden:       s("botanical_garden",       "Botanical Garden",             28.5570, 77.3370, ["blue", "magenta"], { isInterchange: true }),
+  botanical_garden:       s("botanical_garden",       "Botanical Garden",             28.5570, 77.3370, ["blue", "magenta"], { isInterchange: true,
+    gates: [
+      { id: "1", description: "Near NOIDA Authority Parking, Sector 38A", hasLift: true },
+      { id: "2", description: "DHL side, Okhla Bird Sanctuary Road", hasLift: true },
+      { id: "3", description: "Botanical Garden Republic, Sector 38", hasLift: true },
+      { id: "4", description: "Towards Sector 37, Indian Oil Petrol Pump", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: true },
+    platformInfo: {
+      blue:    { number: 1, direction: "towards Dwarka Sector 21" },
+      magenta: { number: 3, direction: "towards Janakpuri West" },
+    },
+  }),
   golf_course:            s("golf_course",            "Golf Course",                  28.5618, 77.3638, ["blue"]),
   noida_city_centre:      s("noida_city_centre",      "Noida City Centre",            28.5698, 77.3848, ["blue"]),
   noida_sec_34:           s("noida_sec_34",           "Noida Sector 34",              28.5748, 77.4008, ["blue"]),
@@ -243,11 +388,34 @@ export const stations: Record<string, Station> = {
   khan_market:            s("khan_market",            "Khan Market",                   28.6018, 77.2258, ["violet"]),
   jawaharlal_nehru_stad:  s("jawaharlal_nehru_stad",  "JLN Stadium",                   28.5918, 77.2328, ["violet"]),
   jangpura:               s("jangpura",               "Jangpura",                      28.5818, 77.2418, ["violet"]),
-  lajpat_nagar:           s("lajpat_nagar",           "Lajpat Nagar",                  28.5698, 77.2418, ["violet", "pink"], { isInterchange: true }),
+  lajpat_nagar:           s("lajpat_nagar",           "Lajpat Nagar",                  28.5698, 77.2418, ["violet", "pink"], { isInterchange: true,
+    gates: [
+      { id: "1", description: "Towards Lajpat Nagar-2, A Block Central Market", hasLift: true },
+      { id: "2", description: "Towards South Extension Part-I", hasLift: true },
+      { id: "3", description: "Towards Defence Colony", hasLift: true },
+      { id: "5", description: "Central Market main entrance", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: false },
+    platformInfo: {
+      violet: { number: 1, direction: "towards Kashmere Gate" },
+      pink: { number: 3, direction: "towards Majlis Park" },
+    },
+  }),
   moolchand:              s("moolchand",              "Moolchand",                     28.5608, 77.2368, ["violet"]),
   kailash_colony:         s("kailash_colony",         "Kailash Colony",                28.5508, 77.2378, ["violet"]),
   nehru_place:            s("nehru_place",            "Nehru Place",                   28.5468, 77.2508, ["violet"]),
-  kalkaji_mandir:         s("kalkaji_mandir",         "Kalkaji Mandir",                28.5468, 77.2528, ["violet", "magenta"], { isInterchange: true }),
+  kalkaji_mandir:         s("kalkaji_mandir",         "Kalkaji Mandir",                28.5468, 77.2528, ["violet", "magenta"], { isInterchange: true,
+    gates: [
+      { id: "1", description: "Near BigBazaar entrance, Kalkaji Main", hasLift: true },
+      { id: "3", description: "Near Fire Station, Nehru Place side", hasLift: true },
+      { id: "4", description: "Okhla Market side", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: true },
+    platformInfo: {
+      violet: { number: 1, direction: "towards Kashmere Gate" },
+      magenta: { number: 3, direction: "towards Botanical Garden" },
+    },
+  }),
   govind_puri:            s("govind_puri",            "Govind Puri",                   28.5378, 77.2568, ["violet"]),
   harkesh_nagar:          s("harkesh_nagar",          "Harkesh Nagar Okhla",           28.5308, 77.2628, ["violet"]),
   jasola:                 s("jasola",                 "Jasola Apollo",                 28.5248, 77.2718, ["violet"]),

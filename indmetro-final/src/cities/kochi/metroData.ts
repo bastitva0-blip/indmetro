@@ -15,6 +15,12 @@
  * Chainage (km from Aluva) — from Wikipedia station table — used for distance-based fares.
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string;
   name: string;
@@ -24,6 +30,9 @@ export interface Station {
   openedYear: number;
   hasRailTransfer?: boolean;    // connects to Indian Railways
   isWIP?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = { blue: "#3B82F6", pink: "#EC4899" } as const;

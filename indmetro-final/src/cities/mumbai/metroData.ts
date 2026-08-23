@@ -31,6 +31,12 @@
  *   Mahalaxmi       : Line 3 ↔ WR Suburban + Mumbai Monorail
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string;
   name: string;
@@ -42,6 +48,9 @@ export interface Station {
   hasMonorailTransfer?: boolean;
   isUnderground?: boolean;   // Line 3 — most stations UG
   isAtGrade?: boolean;       // Line 3 — Aarey JVLR only
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = {
@@ -69,7 +78,17 @@ const L1: Station[] = [
   { id: "western_express",name:"Western Express Hwy", coordinates: [19.1106, 72.8582], lines: ["line1"], chainageKm: { line1: 4.1 } },
   { id: "chakala_l1",    name: "Chakala",             coordinates: [19.1082, 72.8688], lines: ["line1"], chainageKm: { line1: 5.2 } },
   { id: "airport_road_l1",name:"Airport Road",        coordinates: [19.1002, 72.8782], lines: ["line1"], chainageKm: { line1: 6.5 } },
-  { id: "marol_naka",    name: "Marol Naka",          coordinates: [19.0952, 72.8888], lines: ["line1", "line3"], chainageKm: { line1: 7.5 }, isInterchange: true }, // ↔ Line 3 Aqua
+  { id: "marol_naka",    name: "Marol Naka",          coordinates: [19.0952, 72.8888], lines: ["line1", "line3"], chainageKm: { line1: 7.5 }, isInterchange: true, // ↔ Line 3 Aqua
+    gates: [
+      { id: "W1", description: "Marol Naka Junction, Andheri Kurla Road (West)", hasLift: true, hasRamp: true },
+      { id: "E1", description: "Marol Military Road, MIDC side (East)", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: false },
+    platformInfo: {
+      line1: { number: 1, direction: "towards Versova" },
+      line3: { number: 3, direction: "towards Cuffe Parade" },
+    },
+  },
   { id: "saki_naka",     name: "Saki Naka",           coordinates: [19.0882, 72.8968], lines: ["line1"], chainageKm: { line1: 8.5 } },
   { id: "asalpha",       name: "Asalpha",             coordinates: [19.0818, 72.9048], lines: ["line1"], chainageKm: { line1: 9.4 } },
   { id: "jagruti_nagar", name: "Jagruti Nagar",       coordinates: [19.0768, 72.9118], lines: ["line1"], chainageKm: { line1: 10.3 } },
@@ -78,7 +97,17 @@ const L1: Station[] = [
 
 // ── LINE 2A: Yellow — Dahisar East → DN Nagar ───────────────────────────────
 const L2A: Station[] = [
-  { id: "dahisar_east",     name: "Dahisar East",      coordinates: [19.2511, 72.8670], lines: ["line2a", "line7", "line9"], chainageKm: { line2a: 0 }, isInterchange: true, hasRailTransfer: true },
+  { id: "dahisar_east",     name: "Dahisar East",      coordinates: [19.2511, 72.8670], lines: ["line2a", "line7", "line9"], chainageKm: { line2a: 0 }, isInterchange: true, hasRailTransfer: true,
+    gates: [
+      { id: "N1", description: "Dahisar East Station Road, near Western Railway station", hasLift: true, hasRamp: true },
+      { id: "S1", description: "Old Nagardas Road, Eksar side", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: true },
+    platformInfo: {
+      line2a: { number: 1, direction: "towards DN Nagar" },
+      line7:  { number: 3, direction: "towards Andheri East" },
+    },
+  },
   { id: "anand_nagar_2a",   name: "Anand Nagar",       coordinates: [19.2318, 72.8638], lines: ["line2a"], chainageKm: { line2a: 2.0 } },
   { id: "kandivali_east",   name: "Kandivali East",    coordinates: [19.2178, 72.8688], lines: ["line2a"], chainageKm: { line2a: 3.6 } },
   { id: "poisar_2a",        name: "Poisar",            coordinates: [19.2018, 72.8708], lines: ["line2a"], chainageKm: { line2a: 5.4 } },

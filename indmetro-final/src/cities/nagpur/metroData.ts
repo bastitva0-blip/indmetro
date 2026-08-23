@@ -13,6 +13,12 @@
  * Timings: 6:00–22:00 daily | Headway: 3 min peak | 5–10 min off-peak
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string;
   name: string;
@@ -24,6 +30,9 @@ export interface Station {
   isAtGrade?: boolean;
   isWIP?: boolean;
   isUnderground?: boolean; // at-grade section south of airport
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = { orange: "#F97316", aqua: "#00BCD4" } as const;
@@ -67,6 +76,16 @@ export const stations: Record<string, Station> = {
     coordinates: [21.14152, 79.08315], lines: ["orange", "aqua"],
     chainageKm: { orange: 8.2, aqua: 9.4 },
     isInterchange: true,
+    gates: [
+      { id: "N1", description: "Sitabuldi Main Road, Variety Square side", hasLift: true, hasRamp: true },
+      { id: "S1", description: "Empress Mall, Residency Road side", hasLift: true },
+      { id: "E1", description: "Central Avenue, Cotton Market side", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: false },
+    platformInfo: {
+      orange: { number: 1, direction: "towards Prajapati Nagar" },
+      aqua:   { number: 3, direction: "towards Lokmanya Nagar" },
+    },
   },
   congress_nagar: {
     id: "congress_nagar", name: "Congress Nagar",

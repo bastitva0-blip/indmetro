@@ -10,6 +10,12 @@
  * Future: Amandoot ↔ future Navi Mumbai Metro Orange Line
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string;
   name: string;
@@ -18,6 +24,9 @@ export interface Station {
   isTerminal?: boolean;
   hasRailTransfer?: boolean;
   hasFutureInterchange?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = { line1: "#FFC107" } as const;

@@ -28,6 +28,12 @@
  * Timings:   Blue 6:50–21:45 | Green 6:30–22:47 | Orange 6:00–21:45 | Purple 7:00–21:00
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string;
   name: string;
@@ -37,6 +43,9 @@ export interface Station {
   hasRailTransfer?: boolean;
   isUnderground?: boolean;
   isWIP?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = {

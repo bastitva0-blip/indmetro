@@ -13,6 +13,12 @@
  * Sources: Wikipedia, UPMRC, mymetro.in, metrorailnews.in (Aug 2026)
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string;
   name: string;
@@ -21,6 +27,9 @@ export interface Station {
   isUnderground?: boolean;
   isInterchange?: boolean;
   isWIP?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = {
@@ -78,6 +87,15 @@ export const stations: Record<string, Station> = {
     coordinates: [26.4705, 80.3286],
     lines: ["orange", "blue"],
     isInterchange: true,
+    gates: [
+      { id: "1", description: "Rawatpur Main Road, Kalyanpur side", hasLift: true, hasRamp: true },
+      { id: "2", description: "GT Road, Rawatpur Village side", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: false },
+    platformInfo: {
+      orange: { number: 1, direction: "towards IIT Kanpur" },
+      blue:   { number: 3, direction: "towards Naubasta" },
+    },
   },
   llr_hospital: {
     id: "llr_hospital",

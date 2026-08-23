@@ -19,6 +19,12 @@
  * Sources: Wikipedia, HMRL, themetrorailguy.com (Aug 2026)
  */
 
+export interface StationGate {
+  id: string;
+  description: string;
+  hasLift?: boolean;
+  hasRamp?: boolean;
+}
 export interface Station {
   id: string;
   name: string;
@@ -27,6 +33,9 @@ export interface Station {
   isInterchange?: boolean;
   hasRailTransfer?: boolean;
   isWIP?: boolean;
+  gates?: StationGate[];
+  parkingAvailable?: { twoWheeler?: boolean; fourWheeler?: boolean };
+  platformInfo?: Record<string, { number: number; direction: string }>;
 }
 
 export const LINE_COLORS = { red: "#F44336", blue: "#2196F3", green: "#4CAF50" } as const;
@@ -45,7 +54,19 @@ export const stations: Record<string, Station> = {
   pattancheru:       { id: "pattancheru",       name: "Pattancheru",                coordinates: [17.4388, 78.4448], lines: ["red"] },
   prakash_nagar:     { id: "prakash_nagar",     name: "Prakash Nagar",              coordinates: [17.4288, 78.4488], lines: ["red"] },
   begumpet:          { id: "begumpet",          name: "Begumpet",                   coordinates: [17.4418, 78.4668], lines: ["red"], hasRailTransfer: true },
-  ameerpet:          { id: "ameerpet",          name: "Ameerpet",                   coordinates: [17.4348, 78.4538], lines: ["red", "blue"], isInterchange: true },
+  ameerpet:          { id: "ameerpet",          name: "Ameerpet",                   coordinates: [17.4348, 78.4538], lines: ["red", "blue"], isInterchange: true,
+    gates: [
+      { id: "A", description: "Image Hospital, Punjagutta Circle side", hasLift: true, hasRamp: true },
+      { id: "B", description: "Sarathi Studios, Yousufguda Road", hasLift: true },
+      { id: "C", description: "Maitrivanam, Aditya Enclave side", hasLift: true },
+      { id: "D", description: "Balkampet Road, MCH Market side", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: true },
+    platformInfo: {
+      red:  { number: 1, direction: "towards LB Nagar" },
+      blue: { number: 3, direction: "towards Raidurg / HITEC City" },
+    },
+  },
   sr_nagar:          { id: "sr_nagar",          name: "SR Nagar",                   coordinates: [17.4428, 78.4718], lines: ["red"] },
   erragadda:         { id: "erragadda",         name: "Erragadda",                  coordinates: [17.4488, 78.4578], lines: ["red"] },
   esi_hospital:      { id: "esi_hospital",      name: "ESI Hospital",               coordinates: [17.4318, 78.4808], lines: ["red"] },
@@ -53,7 +74,18 @@ export const stations: Record<string, Station> = {
   nampally:          { id: "nampally",          name: "Nampally",                   coordinates: [17.4028, 78.4758], lines: ["red"], hasRailTransfer: true }, // ↔ Hyderabad Deccan rly
   gandhi_bhavan:     { id: "gandhi_bhavan",     name: "Gandhi Bhavan",              coordinates: [17.3928, 78.4728], lines: ["red"] },
   osmania_medical:   { id: "osmania_medical",   name: "Osmania Medical College",    coordinates: [17.3838, 78.4748], lines: ["red"] },
-  mg_bus_station:    { id: "mg_bus_station",    name: "MG Bus Station",             coordinates: [17.3781, 78.4800], lines: ["red", "green"], isInterchange: true },
+  mg_bus_station:    { id: "mg_bus_station",    name: "MG Bus Station",             coordinates: [17.3781, 78.4800], lines: ["red", "green"], isInterchange: true,
+    gates: [
+      { id: "A", description: "MGBS main entrance, Imlibun (direct bus terminal access)", hasLift: true, hasRamp: true },
+      { id: "B", description: "Gowliguda Chowk, Malakpet Road side", hasLift: true },
+      { id: "C", description: "Afzalgunj, Chaderghat Road side", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: false, fourWheeler: false },
+    platformInfo: {
+      red:   { number: 1, direction: "towards LB Nagar" },
+      green: { number: 3, direction: "towards JBS Parade Ground" },
+    },
+  },
   malakpet:          { id: "malakpet",          name: "Malakpet",                   coordinates: [17.3748, 78.4928], lines: ["red"] },
   new_market:        { id: "new_market",        name: "New Market",                 coordinates: [17.3688, 78.5008], lines: ["red"] },
   musarambagh:       { id: "musarambagh",       name: "Musarambagh",                coordinates: [17.3638, 78.5088], lines: ["red"] },
@@ -71,7 +103,18 @@ export const stations: Record<string, Station> = {
   tarnaka:           { id: "tarnaka",           name: "Tarnaka",                    coordinates: [17.4288, 78.5148], lines: ["blue"] },
   mettuguda:         { id: "mettuguda",         name: "Mettuguda",                  coordinates: [17.4288, 78.5018], lines: ["blue"] },
   secunderabad_east: { id: "secunderabad_east", name: "Secunderabad East",          coordinates: [17.4358, 78.4998], lines: ["blue"], hasRailTransfer: true }, // ↔ Secunderabad rly
-  parade_ground:     { id: "parade_ground",     name: "Parade Ground",              coordinates: [17.4388, 78.5028], lines: ["blue", "green"], isInterchange: true }, // ↔ Green (JBS)
+  parade_ground:     { id: "parade_ground",     name: "Parade Ground",              coordinates: [17.4388, 78.5028], lines: ["blue", "green"], isInterchange: true, // ↔ Green (JBS)
+    gates: [
+      { id: "A", description: "Parade Ground, Secunderabad Clock Tower side", hasLift: true, hasRamp: true },
+      { id: "B", description: "Paradise Circle, MJ Road side", hasLift: true },
+      { id: "C", description: "SP Road, Secunderabad Railway Station side", hasLift: true },
+    ],
+    parkingAvailable: { twoWheeler: true, fourWheeler: false },
+    platformInfo: {
+      blue:  { number: 1, direction: "towards Raidurg / HITEC City" },
+      green: { number: 3, direction: "towards MG Bus Station" },
+    },
+  },
   paradise:          { id: "paradise",          name: "Paradise",                   coordinates: [17.4428, 78.4898], lines: ["blue"] },
   rasoolpura:        { id: "rasoolpura",        name: "Rasoolpura",                 coordinates: [17.4448, 78.4798], lines: ["blue"] },
   prakash_nagar_blue:{ id: "prakash_nagar_blue",name: "Prakash Nagar",             coordinates: [17.4438, 78.4668], lines: ["blue"] },
