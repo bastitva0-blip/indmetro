@@ -552,7 +552,7 @@ export function CityApp({
 
       {/* Bottom dock */}
       <div className="fixed bottom-0 inset-x-0 z-[1200] bg-card/95 backdrop-blur border-t border-border safe-bottom">
-        <div className="grid grid-cols-5 gap-1 px-2 py-2 max-w-xl mx-auto">
+        <div className="grid grid-cols-6 gap-1 px-2 py-2 max-w-xl mx-auto">
           <DockBtn icon={<Menu className="h-5 w-5" />} label="Menu" onClick={() => setMenuOpen(true)} />
           <DockBtn icon={<Route className="h-5 w-5" />} label="Plan Route" active={activeTab === "route"} onClick={() => setActiveTab(activeTab === "route" ? null : "route")} />
           <DockBtn icon={<ListTree className="h-5 w-5" />} label="Stations" active={activeTab === "stations"} onClick={() => setActiveTab(activeTab === "stations" ? null : "stations")} />

@@ -359,7 +359,8 @@ export const GenericCityMap = ({
 
       {/* Feature 40: Line filter toggles */}
       {lineKeys.length > 1 && (
-        <div className="absolute bottom-20 left-2 z-[800] flex flex-col gap-1 pointer-events-auto">
+        <div className="absolute top-14 left-0 right-0 z-[800] pointer-events-auto">
+          <div className="flex flex-row gap-1.5 overflow-x-auto px-2 py-1.5 no-scrollbar" style={{ scrollbarWidth: "none" }}>
           {lineKeys.map((line) => {
             const color = lineColors[line] ?? "#888";
             const hidden = hiddenLines.has(line);
@@ -368,14 +369,15 @@ export const GenericCityMap = ({
                 key={line}
                 onClick={() => toggleLine(line)}
                 aria-pressed={!hidden}
-                className="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold shadow-md border transition-all min-h-[32px]"
+                className="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold shadow-md border transition-all shrink-0 min-h-[28px]"
                 style={{ background: hidden ? "var(--background)" : color, color: hidden ? color : "#fff", borderColor: color, opacity: hidden ? 0.7 : 1 }}
               >
                 <span className="h-2 w-2 rounded-full shrink-0" style={{ background: hidden ? color : "#fff" }} />
-                {(lineNames[line] ?? line).split(" ")[0]}
+                {(lineNames[line] ?? line).replace(" Line", "")}
               </button>
             );
           })}
+          </div>
         </div>
       )}
     </div>
