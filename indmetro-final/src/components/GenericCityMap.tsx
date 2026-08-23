@@ -350,7 +350,7 @@ export const GenericCityMap = ({
       {getCrowd && (
         <button
           onClick={() => setHeatmapOn((v) => !v)}
-          className={`absolute top-2 right-2 z-[800] rounded-full px-3 py-1.5 text-xs font-semibold shadow-md border transition-all min-h-[36px] ${heatmapOn ? "bg-orange-500 text-white border-orange-500" : "bg-background border-border text-foreground"}`}
+          className={`absolute top-[108px] right-2 z-[800] rounded-full px-3 py-1.5 text-xs font-semibold shadow-md border transition-all min-h-[32px] ${heatmapOn ? "bg-orange-500 text-white border-orange-500" : "bg-background border-border text-foreground"}`}
           title="Toggle crowd heatmap"
         >
           {heatmapOn ? "🌡️ Live" : "🌡️ Crowd"}
