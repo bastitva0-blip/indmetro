@@ -898,7 +898,7 @@ export function CityApp({
           fromName={route.origin.name}
           toName={route.destination.name}
           fare={route.discountedFare ?? route.fare}
-          durationMinutes={route.durationMinutes}
+          durationMinutes={route.totalTime}
         />
       )}
 
