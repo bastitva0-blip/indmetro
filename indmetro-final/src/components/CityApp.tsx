@@ -13,13 +13,14 @@
  *  - Tips dialog — per-city fares, headways, smart card info
  *  - Journey Mode overlay
  */
-import { useState, useCallback, lazy, Suspense, useEffect, useMemo } from "react";
+import { useState, useCallback, lazy, Suspense, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronLeft, Navigation, X, Route, ListTree, Users, Menu, Train,
   Search, MapPin, Landmark, Clock, IndianRupee, CreditCard, Baby,
-  ShieldCheck, Info,
+  ShieldCheck, Info, ArrowUpDown,
 } from "lucide-react";
+import { haptics } from "@/lib/haptics";
 import {
   Drawer,
   DrawerContent,
@@ -176,6 +177,12 @@ export function CityApp({
   const [activeTrainCount, setActiveTrainCount] = useState(0);
 
   const [origin, setOrigin] = useState("");
+  const [swapRotated, setSwapRotated] = useState(false);
+  // Feature 9: skeleton loader while route is calculating
+  const [isRouting, setIsRouting] = useState(false);
+  // Feature 10: fare odometer — displayed fare and animated value
+  const [displayFare, setDisplayFare] = useState(0);
+  const fareRafRef = useRef<number | null>(null);
   const [dest, setDest] = useState("");
   const [route, setRoute] = useState<CityRoute | null>(null);
   const [routeError, setRouteError] = useState<string | null>(null);
@@ -247,12 +254,56 @@ export function CityApp({
     else setHighlightIds(null);
   }, []);
 
+  // Feature 10: animate fare from prev value to new value
+  const animateFare = useCallback((targetFare: number) => {
+    if (fareRafRef.current) cancelAnimationFrame(fareRafRef.current);
+    const start = performance.now();
+    const duration = 400;
+    setDisplayFare((prev) => {
+      const from = prev;
+      const step = (now: number) => {
+        const elapsed = now - start;
+        const t = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
+        setDisplayFare(Math.round(from + (targetFare - from) * eased));
+        if (t < 1) fareRafRef.current = requestAnimationFrame(step);
+      };
+      fareRafRef.current = requestAnimationFrame(step);
+      return from;
+    });
+  }, []);
+
   const tryRoute = useCallback((o: string, d: string) => {
-    if (!o || !d || o === d) { setRoute(null); setHighlightIds(null); return; }
-    const r = planRoute(o, d);
-    if (r) { setRoute(r); setRouteError(null); buildHighlight(r); }
-    else { setRoute(null); setRouteError("No route found."); setHighlightIds(null); }
-  }, [planRoute, buildHighlight]);
+    if (!o || !d || o === d) { setRoute(null); setHighlightIds(null); setIsRouting(false); return; }
+    setIsRouting(true);
+    // planRoute is synchronous — setTimeout gives React a frame to show the skeleton
+    setTimeout(() => {
+      const r = planRoute(o, d);
+      setIsRouting(false);
+      if (r) {
+        setRoute(r);
+        setRouteError(null);
+        buildHighlight(r);
+        haptics.routeFound();
+        animateFare(r.discountedFare ?? r.fare);
+      } else {
+        setRoute(null);
+        setRouteError("No route found.");
+        setHighlightIds(null);
+      }
+    }, 80);
+  }, [planRoute, buildHighlight, animateFare]);
+
+  // Feature 4: swap origin ↔ destination
+  const handleSwap = useCallback(() => {
+    setSwapRotated((r) => !r);
+    haptics.tap();
+    const newOrigin = dest;
+    const newDest = origin;
+    setOrigin(newOrigin);
+    setDest(newDest);
+    tryRoute(newOrigin, newDest);
+  }, [origin, dest, tryRoute]);
 
   const handleOriginChange = useCallback((id: string) => {
     setOrigin(id);
@@ -274,6 +325,7 @@ export function CityApp({
     if (!route) return;
     const line = route.steps.find((s) => s.line)?.line ?? Object.keys(lineStations)[0];
     await requestNotificationPermission();
+    haptics.journeyStart();
     await startJourney(route.origin.id, route.destination.id, line);
   }, [route, startJourney, requestNotificationPermission, lineStations]);
 
@@ -534,6 +586,22 @@ export function CityApp({
             {activeTab === "route" && (
               <div className="space-y-3">
                 <StationSelect label="From" value={origin} onChange={handleOriginChange} stations={stationOptions} />
+
+                {/* Feature 4: swap button */}
+                <div className="flex justify-center -my-1 relative z-10">
+                  <button
+                    onClick={handleSwap}
+                    disabled={!origin && !dest}
+                    aria-label="Swap origin and destination"
+                    className="h-7 w-7 rounded-full border border-border bg-background shadow-sm flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-30"
+                  >
+                    <ArrowUpDown
+                      className="h-3.5 w-3.5 text-muted-foreground transition-transform duration-300"
+                      style={{ transform: swapRotated ? "rotate(180deg)" : "rotate(0deg)" }}
+                    />
+                  </button>
+                </div>
+
                 <StationSelect label="To" value={dest} onChange={handleDestChange} stations={stationOptions} />
 
                 {routeError && <p className="text-xs text-center text-destructive">{routeError}</p>}
@@ -541,7 +609,34 @@ export function CityApp({
                   <p className="text-xs text-center text-muted-foreground">Same station selected.</p>
                 )}
 
-                {route && (
+                {/* Feature 9: route skeleton loader */}
+                {isRouting && (
+                  <div className="bg-card border border-border rounded-2xl p-4 space-y-3 animate-pulse">
+                    <div className="flex items-center gap-2">
+                      <div className="h-4 w-24 rounded bg-muted" />
+                      <div className="h-3 w-3 rounded bg-muted" />
+                      <div className="h-4 w-24 rounded bg-muted" />
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[0, 1, 2].map((i) => (
+                        <div key={i} className="bg-muted/50 rounded-xl py-3 flex flex-col items-center gap-1.5">
+                          <div className="h-4 w-8 rounded bg-muted" />
+                          <div className="h-2.5 w-12 rounded bg-muted" />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="space-y-2 pt-1 border-t border-border">
+                      {[0, 1, 2].map((i) => (
+                        <div key={i} className="flex items-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-muted shrink-0" />
+                          <div className="h-3 rounded bg-muted" style={{ width: `${60 + i * 15}%` }} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {!isRouting && route && (
                   <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
                     <div className="flex items-center gap-2 text-sm font-medium flex-wrap">
                       <span>{route.origin.name}</span>
@@ -559,7 +654,7 @@ export function CityApp({
                       {[
                         { label: "Stations", value: String(route.totalStations) },
                         { label: "Time", value: `~${route.totalTime} min` },
-                        { label: "Fare", value: `₹${route.discountedFare ?? route.fare}` },
+                        { label: "Fare", value: `₹${displayFare}` },
                       ].map(({ label, value }) => (
                         <div key={label} className="bg-muted/50 rounded-xl py-2">
                           <p className="text-base font-bold">{value}</p>
@@ -668,6 +763,22 @@ export function CityApp({
                     </button>
                   );
                 })}
+
+                {/* Feature 9: next trains skeleton — shown briefly while useMemo recalculates */}
+                {selectedStationId && selectedStationNextTrains.length === 0 && (
+                  <div className="mt-3 bg-muted/40 rounded-xl p-3 animate-pulse">
+                    <div className="h-3 w-32 rounded bg-muted mb-3" />
+                    {[0, 1, 2, 3].map((i) => (
+                      <div key={i} className="flex items-center justify-between py-1.5 border-b border-border/50 last:border-0">
+                        <div className="flex items-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-muted shrink-0" />
+                          <div className="h-3 w-28 rounded bg-muted" />
+                        </div>
+                        <div className="h-3 w-10 rounded bg-muted" />
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 {/* Next trains for selected station */}
                 {selectedStationId && selectedStationNextTrains.length > 0 && (
